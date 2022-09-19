@@ -1,0 +1,137 @@
+<body>
+
+  These packages comprise a Nonogram logic-puzzle solver.
+  Please see <a href="https://www.lancaster.ac.uk/~simpsons/nonogram/">Nonogram
+Solver</a> for more information, and <a href="https://www.lancaster.ac.uk/~simpsons/software/pkg-nonowimp">Nonogram Programs</a> for source code.
+
+  <p>
+    A solver should start by instantiating line algorithms.
+    These should form a list from weakest to strongest.
+    &lsquo;Weaker&rsquo; usually means faster, but likely to deduce less than a stronger algorithm.
+  </p>
+
+  <pre>
+List&lt;LineAlgorithm&gt; algorithms = new ArrayList&lt;&gt;();
+algorithms.add(weakestAlgo);
+algorithms.add(...);
+algorithms.add(...);
+algorithms.add(stringestAlgo);
+</pre>
+
+  <p>
+    It should also set up a line heuristic to help order lines for working
+    on:
+  </p>
+
+  <pre>
+LineHeuristic lineHeuristic = Plugins.findLineHeuristic("fast");
+</pre>
+
+  <p>
+    Next, the solver should create a {@link uk.ac.lancs.nonogram.Puzzle} in which to load the XML representation of the puzzle:
+  </p>
+
+  <pre>
+Reader input = <var>...</var>;
+Locale locale = Locale.getDefault();  
+Puzzle data = XMLFormat.INSTANCE.read(input, locale);
+</pre>
+
+  <p>
+    Then it should use {@link uk.ac.lancs.nonogram.solver.Plugins#findGeometry(java.lang.String)} to load geometry compatible with the puzzle.
+    On that, it should invoke {@link     uk.ac.lancs.nonogram.geom.Geometry#createLayout(java.lang.String, java.util.function.Function, java.util.Map)} to get a geometry-independent representation of the puzzle in terms of lines and cells:
+  </p>
+
+  <pre>
+Geometry geom = Plugins.findGeometry(data.geometryType);
+DisplayableLayout layout =
+  geom.createLayout(data.geometryType, data.clues, data::index);
+</pre>
+
+  <p>
+    At some point, a {@link uk.ac.lancs.nonogram.solver.GridSource}, a {@link uk.ac.lancs.nonogram.solver.GridSink}, and a {@link uk.ac.lancs.nonogram.geom.DisplayFactory} should be set up, usually provided by a single object:
+  </p>
+
+  <pre>
+SwingGridManager&lt;Grid&gt; manager = new SwingGridManager&lt;&gt;(layout);
+GridSink&lt;Grid&gt; sink = manager;
+GridSource&lt;Grid&gt; source = manager;
+KeyedDisplayFactory&lt;Grid&gt; displays = manager;
+</pre>
+
+  <p>
+    The grid source should be populated by an initial grid:
+  </p>
+
+  <pre>
+Grid initialGrid =
+  new Grid(algoCount, sink, layout, lineHeuristic, displays);
+initialGrid.start();
+</pre>
+
+  <p>
+    Threads should process work provided by the source with this idiom:
+  </p>
+
+  <pre>
+for ( ; ; ) {
+    /* Keep going until there are no more grids to work on. */
+    Grid grid = source.selectGrid();
+    if (grid == null) break;
+
+    /* Work on the current grid until it tells us to try
+     * something else. */
+    for ( ; ; ) {
+        try (LineJob job = grid.getJob()) {
+            if (job.isInvalid()) break;
+            LineAlgorithm algo =
+              algorithms.get(job.getAlgorithmIndex());
+            LineSolver solver = algo.prepare(job.getLine());
+            grid.registerSolver(solver);
+            job.submit(solver.process());
+        }
+    }
+}
+</pre>
+
+
+  @title Nonogram Solver Software
+
+
+  @group core Core packages
+
+  @group support Supporting libraries
+
+  @group plugin-api Plug-in APIs
+
+  @group plugins Plug-ins
+
+  @package core uk.ac.lancs.nonogram.solver
+
+  @package core uk.ac.lancs.nonogram
+
+  @package support uk.ac.lancs.nonogram.util
+
+  @package plugin-api uk.ac.lancs.nonogram.plugin
+
+  @package plugin-api uk.ac.lancs.nonogram.line
+
+  @package plugin-api uk.ac.lancs.nonogram.line.heuristic
+
+  @package plugin-api uk.ac.lancs.nonogram.geom
+
+  @package plugins uk.ac.lancs.nonogram.line.fast
+
+  @package plugins uk.ac.lancs.nonogram.geom.rect
+
+  @package plugins uk.ac.lancs.nonogram.line.heuristic.fast
+
+  @pname simpsons Steven Simpson
+
+  @plink simpsons https://www.lancaster.ac.uk/~simpsons/
+
+  @paddr simpsons School of Computing and Communications, Lancaster University
+
+  @pdesc simpsons
+
+</body>
