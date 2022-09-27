@@ -45,56 +45,27 @@ import java.util.List;
  * <var>L</var>&minus;1, where <var>L</var> is the number of lines. A
  * line can be described by listing the indices of all cells within it.
  * 
- * @todo Drop {@link #getLineCount()}, and replace {@link #getLine(int)}
- * with <code>List&lt;Line&gt; lines()</code>, an immutable view of all
- * lines. Its {@link List#size()} method replaces
- * {@link #getLineCount()}.
- * 
- * @todo Drop {@link #getCellCount()}, and replace {@link #getCells()}
- * with <code>List&lt;Cell&gt; cells()</code>, an immutable view of all
- * cells. Its {@link List#size()} method replaces
- * {@link #getCellCount()}.
- * 
  * @author simpsons
  */
 public interface Layout {
-    /**
-     * Get the number of lines in this puzzle.
-     * 
-     * @return the number of lines in the puzzle
-     */
-    int getLineCount();
-
-    /**
-     * Get the number of cells in this puzzle.
-     * 
-     * @return the number of cells in the puzzle
-     */
-    int getCellCount();
-
     /**
      * Get the number of colours, including the background.
      * 
      * @return the number of colours in the puzzle
      */
-    int getColorCount();
+    int colors();
 
     /**
-     * Describe a line in this puzzle.
+     * Get an immutable view of cell descriptions, in cell index order.
      * 
-     * @param lineNo the number of the line of interest
-     * 
-     * @return the details of the requested line
-     * 
-     * @throws IndexOutOfBoundsException if the line number is not in
-     * the valid range
+     * @return the cell descriptions
      */
-    Line getLine(int lineNo);
+    List<Cell> cells();
 
     /**
-     * Get an iteration over all cells.
+     * Get an immutable view of line descriptions, in line index order.
      * 
-     * @return an iteration of all cells
+     * @return the line descriptions
      */
-    Iterable<Cell> getCells();
+    List<Line> lines();
 }

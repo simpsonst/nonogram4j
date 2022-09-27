@@ -43,12 +43,12 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.WeakHashMap;
-import uk.ac.lancs.nonogram.aspect.Cells;
 import uk.ac.lancs.nonogram.Cell;
-import uk.ac.lancs.nonogram.geom.Display;
-import uk.ac.lancs.nonogram.geom.DisplayFactory;
 import uk.ac.lancs.nonogram.Layout;
 import uk.ac.lancs.nonogram.Line;
+import uk.ac.lancs.nonogram.aspect.Cells;
+import uk.ac.lancs.nonogram.geom.Display;
+import uk.ac.lancs.nonogram.geom.DisplayFactory;
 import uk.ac.lancs.nonogram.line.Cache;
 import uk.ac.lancs.nonogram.line.LineSolver;
 import uk.ac.lancs.nonogram.line.LineSolver.Result;
@@ -194,9 +194,9 @@ public final class Grid {
         this.display = this.displays.newDisplay();
         this.algos = algos;
         this.layout = layout;
-        this.colors = layout.getColorCount();
-        this.cellCount = layout.getCellCount();
-        this.lineCount = layout.getLineCount();
+        this.colors = layout.colors();
+        this.cellCount = layout.cells().size();
+        this.lineCount = layout.lines().size();
         this.caches = new Cache[lineCount];
         this.cellsRemaining = cellCount;
         this.lines = new Line[lineCount];
@@ -214,7 +214,7 @@ public final class Grid {
         try (Display.Transaction xact = display.open()) {
             levels = new int[lineCount];
             for (int i = 0; i < lineCount; i++) {
-                Line line = lines[i] = layout.getLine(i);
+                Line line = lines[i] = layout.lines().get(i);
                 weights[i] =
                     heur.compute(line.cells().size(), line.clue()) * colors;
                 levels[i] = this.algos;
@@ -397,7 +397,7 @@ public final class Grid {
         /* TODO: Abstract this to a plug-in. */
         Cell bestCell = null;
         int bestScore = Integer.MIN_VALUE;
-        for (Cell cell : layout.getCells()) {
+        for (Cell cell : layout.cells()) {
             int options = cells[cell.index()].cardinality();
 
             /* We don't make guesses at cells which are known. */

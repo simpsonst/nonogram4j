@@ -44,17 +44,17 @@ import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import uk.ac.lancs.nonogram.Block;
+import uk.ac.lancs.nonogram.Cell;
+import uk.ac.lancs.nonogram.Line;
 import uk.ac.lancs.nonogram.aspect.Bar;
 import uk.ac.lancs.nonogram.aspect.Clue;
 import uk.ac.lancs.nonogram.aspect.Hue;
-import uk.ac.lancs.nonogram.Cell;
 import uk.ac.lancs.nonogram.geom.DisplayType;
 import uk.ac.lancs.nonogram.geom.DisplayableLayout;
-import uk.ac.lancs.nonogram.Line;
 import uk.ac.lancs.nonogram.geom.NullWidgetDisplayFactory;
 import uk.ac.lancs.nonogram.geom.WidgetDisplay;
 import uk.ac.lancs.nonogram.geom.WidgetDisplayFactory;
-import uk.ac.lancs.nonogram.Block;
 
 /**
  * The number of cells is the width <var>w</var> times the height
@@ -77,8 +77,6 @@ public class RectangularLayout implements DisplayableLayout {
     private final int colourCount;
 
     private final Cell[] cells;
-
-    private final List<Cell> cellList;
 
     private final Line[] lines;
 
@@ -188,9 +186,8 @@ public class RectangularLayout implements DisplayableLayout {
 
             /* Convert the blocks with abstract colours into ones with
              * indexed colours. */
-            final List<Block> ibs =
-                bs.stream().map(b -> Bar.of(b, colorMap))
-                    .collect(Collectors.toList());
+            final List<Block> ibs = bs.stream().map(b -> Bar.of(b, colorMap))
+                .collect(Collectors.toList());
 
             /* Get a view of the cells that form this line. */
             final List<Cell> baseCells = slicer.slice(cells, width, height, i);
@@ -249,17 +246,6 @@ public class RectangularLayout implements DisplayableLayout {
 
         /* Create the cell array and an immutable list view of it. */
         this.cells = new Cell[width * height];
-        this.cellList = new AbstractList<Cell>() {
-            @Override
-            public Cell get(int index) {
-                return cells[index];
-            }
-
-            @Override
-            public int size() {
-                return cells.length;
-            }
-        };
 
         /* Assign each non-blank clue a line number, and record the
          * mapping from each clue's position within its bank to assigned
@@ -305,28 +291,48 @@ public class RectangularLayout implements DisplayableLayout {
     }
 
     @Override
-    public int getLineCount() {
-        return lines.length;
-    }
-
-    @Override
-    public int getCellCount() {
-        return cells.length;
-    }
-
-    @Override
-    public int getColorCount() {
+    public int colors() {
         return colourCount;
     }
 
+    /**
+     * Provides an immutable list view of the lines.
+     */
+    private final List<Line> lineList = new AbstractList<Line>() {
+        @Override
+        public Line get(int index) {
+            return lines[index];
+        }
+
+        @Override
+        public int size() {
+            return lines.length;
+        }
+    };
+
+    /**
+     * Provides an immutable list view of the cells.
+     */
+    private final List<Cell> cellList = new AbstractList<Cell>() {
+        @Override
+        public Cell get(int index) {
+            return cells[index];
+        }
+
+        @Override
+        public int size() {
+            return cells.length;
+        }
+    };
+
     @Override
-    public Line getLine(int lineNo) {
-        return lines[lineNo];
+    public List<Cell> cells() {
+        return cellList;
     }
 
     @Override
-    public Iterable<Cell> getCells() {
-        return cellList;
+    public List<Line> lines() {
+        return lineList;
     }
 
     /**
