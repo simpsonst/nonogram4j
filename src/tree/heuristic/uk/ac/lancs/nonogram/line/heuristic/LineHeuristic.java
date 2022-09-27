@@ -37,7 +37,7 @@ package uk.ac.lancs.nonogram.line.heuristic;
 
 import java.util.List;
 
-import uk.ac.lancs.nonogram.IndexedBlock;
+import uk.ac.lancs.nonogram.Block;
 
 /**
  * Computes a heuristic priority for solving a line.
@@ -55,5 +55,5 @@ public interface LineHeuristic {
      * 
      * @return the line's solving priority
      */
-    int compute(int lineLength, List<? extends IndexedBlock> clue);
+    int compute(int lineLength, List<? extends Block> clue);
 }

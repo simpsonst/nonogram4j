@@ -33,7 +33,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package uk.ac.lancs.nonogram;
+package uk.ac.lancs.nonogram.aspect;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -288,14 +288,14 @@ public class XMLFormat implements Format {
         for (Map.Entry<String, List<Clue>> bank : puzzle.clues.entrySet()) {
             StringBuilder content = new StringBuilder();
             for (Clue line : bank.getValue()) {
-                List<Block> blocks = line.blocks();
+                List<Bar> blocks = line.blocks();
                 content.append("\n    ");
                 if (blocks == null) {
                     content.append("-");
                     continue;
                 }
                 String sep = "";
-                for (Block block : blocks) {
+                for (Bar block : blocks) {
                     content.append(sep);
                     String key = codes[puzzle.index(block.color)];
                     if (block.length != 1 || key.isEmpty())
@@ -530,7 +530,7 @@ public class XMLFormat implements Format {
 
     private static void parseClues(List<Clue> bank, String text,
                                    Map<String, Hue> colorCodes) {
-        List<Block> currentLine = new ArrayList<>();
+        List<Bar> currentLine = new ArrayList<>();
         Matcher m = BLOCK_SYNTAX.matcher(text);
         while (m.find()) {
             String numText = m.group(1);
@@ -543,11 +543,11 @@ public class XMLFormat implements Format {
                 int size = Integer.parseInt(numText);
                 Hue color =
                     colorCodes.computeIfAbsent(tileText, k -> Hue.distinct());
-                currentLine.add(Block.of(size, color));
+                currentLine.add(Bar.of(size, color));
             } else if (unitTileText != null) {
                 Hue color = colorCodes.computeIfAbsent(unitTileText,
                                                        k -> Hue.distinct());
-                currentLine.add(Block.of(1, color));
+                currentLine.add(Bar.of(1, color));
             } else if (sep != null && sep.isEmpty()) {
                 if (currentLine.size() == 1 && currentLine.get(0).length == 0)
                     currentLine.clear();

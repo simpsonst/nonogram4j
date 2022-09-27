@@ -45,7 +45,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import uk.ac.lancs.nonogram.Tile;
+import uk.ac.lancs.nonogram.aspect.Tile;
 
 /**
  * @resume A Swing component that displays a two-dimensional Nonogram

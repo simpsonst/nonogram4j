@@ -33,56 +33,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package uk.ac.lancs.nonogram.geom;
+package uk.ac.lancs.nonogram.aspect;
 
 /**
- * Describes a puzzle in terms of lines and cells, without having to
- * reference its geometry. Each cell has a unique index from zero to
- * <var>C</var>&minus;1, where <var>C</var> is the number of cells. Each
- * line has a unique index from zero to <var>L</var>&minus;1, where
- * <var>L</var> is the number of lines. A line can be described by
- * listing the indices of all cells within it.
+ * Identifies the shape of a tile.
  * 
  * @author simpsons
  */
-public interface Layout {
+public enum Shape {
     /**
-     * Get the number of lines in this puzzle.
-     * 
-     * @return the number of lines in the puzzle
+     * The cell is filled with the background colour.
      */
-    int getLineCount();
+    BLANK,
 
     /**
-     * Get the number of cells in this puzzle.
-     * 
-     * @return the number of cells in the puzzle
+     * The cell is filled with the background colour, and a dot or small
+     * circle is drawn within it in the foreground colour.
      */
-    int getCellCount();
+    DOT,
 
     /**
-     * Get the number of colours, including the background.
-     * 
-     * @return the number of colours in the puzzle
+     * The cell is filled with the foreground colour.
      */
-    int getColorCount();
-
-    /**
-     * Describe a line in this puzzle.
-     * 
-     * @param lineNo the number of the line of interest
-     * 
-     * @return the details of the requested line
-     * 
-     * @throws IndexOutOfBoundsException if the line number is not in
-     * the valid range
-     */
-    Line getLine(int lineNo);
-
-    /**
-     * Get an iteration over all cells.
-     * 
-     * @return an iteration of all cells
-     */
-    Iterable<Cell> getCells();
+    SOLID;
 }

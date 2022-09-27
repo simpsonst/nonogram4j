@@ -44,17 +44,17 @@ import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import uk.ac.lancs.nonogram.Block;
-import uk.ac.lancs.nonogram.Clue;
-import uk.ac.lancs.nonogram.Hue;
-import uk.ac.lancs.nonogram.geom.Cell;
+import uk.ac.lancs.nonogram.aspect.Bar;
+import uk.ac.lancs.nonogram.aspect.Clue;
+import uk.ac.lancs.nonogram.aspect.Hue;
+import uk.ac.lancs.nonogram.Cell;
 import uk.ac.lancs.nonogram.geom.DisplayType;
 import uk.ac.lancs.nonogram.geom.DisplayableLayout;
-import uk.ac.lancs.nonogram.geom.Line;
+import uk.ac.lancs.nonogram.Line;
 import uk.ac.lancs.nonogram.geom.NullWidgetDisplayFactory;
 import uk.ac.lancs.nonogram.geom.WidgetDisplay;
 import uk.ac.lancs.nonogram.geom.WidgetDisplayFactory;
-import uk.ac.lancs.nonogram.IndexedBlock;
+import uk.ac.lancs.nonogram.Block;
 
 /**
  * The number of cells is the width <var>w</var> times the height
@@ -180,7 +180,7 @@ public class RectangularLayout implements DisplayableLayout {
                   Slicer slicer) {
         for (int i = 0; i < index.length; i++) {
             /* Extract the blocks, or skip over blank clues. */
-            List<Block> bs = bank[i].blocks();
+            List<Bar> bs = bank[i].blocks();
             if (bs == null) {
                 index[i] = -1;
                 continue;
@@ -188,8 +188,8 @@ public class RectangularLayout implements DisplayableLayout {
 
             /* Convert the blocks with abstract colours into ones with
              * indexed colours. */
-            final List<IndexedBlock> ibs =
-                bs.stream().map(b -> IndexedBlock.of(b, colorMap))
+            final List<Block> ibs =
+                bs.stream().map(b -> Bar.of(b, colorMap))
                     .collect(Collectors.toList());
 
             /* Get a view of the cells that form this line. */
@@ -198,7 +198,7 @@ public class RectangularLayout implements DisplayableLayout {
             /* Create the line abstraction. */
             Line line = new Line() {
                 @Override
-                public List<IndexedBlock> clue() {
+                public List<Block> clue() {
                     return ibs;
                 }
 

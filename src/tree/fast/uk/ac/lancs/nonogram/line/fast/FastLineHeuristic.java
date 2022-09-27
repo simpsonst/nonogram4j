@@ -36,7 +36,7 @@
 package uk.ac.lancs.nonogram.line.fast;
 
 import java.util.List;
-import uk.ac.lancs.nonogram.IndexedBlock;
+import uk.ac.lancs.nonogram.Block;
 import uk.ac.lancs.nonogram.line.heuristic.LineHeuristic;
 
 /**
@@ -70,13 +70,13 @@ public final class FastLineHeuristic implements LineHeuristic {
      * @return {@inheritDoc}
      */
     @Override
-    public int compute(int lineLength, List<? extends IndexedBlock> clue) {
+    public int compute(int lineLength, List<? extends Block> clue) {
         if (clue.isEmpty()) return lineLength;
 
         /* Work out the total minimum length of the line. */
         int sum = 0;
         int lastCol = -1;
-        for (IndexedBlock block : clue) {
+        for (Block block : clue) {
             if (lastCol == block.color) sum++;
             sum += block.length;
             lastCol = block.color;

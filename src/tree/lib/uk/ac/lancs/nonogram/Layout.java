@@ -35,42 +35,66 @@
 
 package uk.ac.lancs.nonogram;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
-import java.util.Locale;
+import java.util.List;
 
 /**
- * Converts between puzzles and text formats.
+ * Describes a puzzle in terms of lines and cells, without having to
+ * reference its geometry or presentation. Each cell has a unique index
+ * from zero to <var>C</var>&minus;1, where <var>C</var> is the number
+ * of cells. Each line has a unique index from zero to
+ * <var>L</var>&minus;1, where <var>L</var> is the number of lines. A
+ * line can be described by listing the indices of all cells within it.
+ * 
+ * @todo Drop {@link #getLineCount()}, and replace {@link #getLine(int)}
+ * with <code>List&lt;Line&gt; lines()</code>, an immutable view of all
+ * lines. Its {@link List#size()} method replaces
+ * {@link #getLineCount()}.
+ * 
+ * @todo Drop {@link #getCellCount()}, and replace {@link #getCells()}
+ * with <code>List&lt;Cell&gt; cells()</code>, an immutable view of all
+ * cells. Its {@link List#size()} method replaces
+ * {@link #getCellCount()}.
  * 
  * @author simpsons
  */
-public interface Format {
+public interface Layout {
     /**
-     * Write a puzzle to a character stream.
+     * Get the number of lines in this puzzle.
      * 
-     * @param puzzle the puzzle to write
-     * 
-     * @param out the stream to write to
-     * 
-     * @throws IOException if an I/O error occurs
+     * @return the number of lines in the puzzle
      */
-    void write(Puzzle puzzle, Writer out) throws IOException;
+    int getLineCount();
 
     /**
-     * Read a puzzle from a character stream.
+     * Get the number of cells in this puzzle.
      * 
-     * @param in the stream to read from
-     * 
-     * @param defaultLocale the locale to assume for unspecified
-     * meta-data
-     * 
-     * @return the parsed puzzle
-     * 
-     * @throws IOException if an I/O error occurs
-     * 
-     * @throws IllegalArgumentException if puzzle is incorrectly
-     * formatted
+     * @return the number of cells in the puzzle
      */
-    Puzzle read(Reader in, Locale defaultLocale) throws IOException;
+    int getCellCount();
+
+    /**
+     * Get the number of colours, including the background.
+     * 
+     * @return the number of colours in the puzzle
+     */
+    int getColorCount();
+
+    /**
+     * Describe a line in this puzzle.
+     * 
+     * @param lineNo the number of the line of interest
+     * 
+     * @return the details of the requested line
+     * 
+     * @throws IndexOutOfBoundsException if the line number is not in
+     * the valid range
+     */
+    Line getLine(int lineNo);
+
+    /**
+     * Get an iteration over all cells.
+     * 
+     * @return an iteration of all cells
+     */
+    Iterable<Cell> getCells();
 }

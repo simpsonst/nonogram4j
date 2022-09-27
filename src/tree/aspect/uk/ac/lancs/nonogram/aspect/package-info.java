@@ -33,33 +33,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package uk.ac.lancs.nonogram.geom;
-
-import java.util.NavigableMap;
-import java.util.TreeMap;
-
 /**
- * @resume Utilities for manipulating cells
- * 
- * @author simpsons
+ * @resume Fundamental types for the representation and display of
+ * puzzles
  */
-public final class Cells {
-    private Cells() {}
+package uk.ac.lancs.nonogram.aspect;
 
-    /**
-     * Create a map out of a collection of cell descriptions.
-     * 
-     * @param cells the cell descriptions, such as returned by
-     * {@link Layout#getCells()}
-     * 
-     * @return a map of the cells indexed by each cell's
-     * {@link Cell#index() index}
-     */
-    public static NavigableMap<Integer, Cell>
-        createCellMap(Iterable<? extends Cell> cells) {
-        TreeMap<Integer, Cell> cellMap = new TreeMap<>();
-        for (Cell cell : cells)
-            cellMap.put(cell.index(), cell);
-        return cellMap;
-    }
-}

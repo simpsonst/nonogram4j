@@ -38,8 +38,8 @@ package uk.ac.lancs.nonogram.geom.rect;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import uk.ac.lancs.nonogram.Clue;
-import uk.ac.lancs.nonogram.Hue;
+import uk.ac.lancs.nonogram.aspect.Clue;
+import uk.ac.lancs.nonogram.aspect.Hue;
 import uk.ac.lancs.nonogram.geom.DisplayableLayout;
 import uk.ac.lancs.nonogram.geom.Geometry;
 

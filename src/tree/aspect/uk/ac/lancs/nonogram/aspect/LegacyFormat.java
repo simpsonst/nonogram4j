@@ -33,7 +33,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package uk.ac.lancs.nonogram;
+package uk.ac.lancs.nonogram.aspect;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -179,9 +179,9 @@ public final class LegacyFormat implements Format {
                 builder = builder.meta(key, locale, parseMetaValue(args));
             } else if (onRows || onColumns) {
                 String[] parts = OLD_CLUE_SEP.split(line.trim());
-                List<Block> blocks = new ArrayList<>(parts.length);
+                List<Bar> blocks = new ArrayList<>(parts.length);
                 for (String part : parts) {
-                    Block block = Block.of(Integer.parseInt(part), SOLID);
+                    Bar block = Bar.of(Integer.parseInt(part), SOLID);
                     blocks.add(block);
                 }
                 if (blocks.size() == 1 && blocks.get(0).length == 0)

@@ -35,7 +35,7 @@
 
 package uk.ac.lancs.nonogram.line;
 
-import uk.ac.lancs.nonogram.IndexedBlock;
+import uk.ac.lancs.nonogram.Block;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.List;
@@ -56,7 +56,7 @@ public class LineWorkUnit {
      * 
      * @resume The line's clue
      */
-    public final List<IndexedBlock> clue;
+    public final List<Block> clue;
 
     /**
      * This is an unmodifiable collection of mutable entries.
@@ -91,7 +91,7 @@ public class LineWorkUnit {
      * @param cache the cache of line-solver states pertaining to this
      * line
      */
-    public LineWorkUnit(int colors, List<IndexedBlock> clue, List<BitSet> cells,
+    public LineWorkUnit(int colors, List<Block> clue, List<BitSet> cells,
                         Cache cache) {
         this.colors = colors;
         this.cells = Collections.unmodifiableList(cells);

@@ -38,8 +38,8 @@ package uk.ac.lancs.nonogram.geom;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import uk.ac.lancs.nonogram.Clue;
-import uk.ac.lancs.nonogram.Hue;
+import uk.ac.lancs.nonogram.aspect.Clue;
+import uk.ac.lancs.nonogram.aspect.Hue;
 
 /**
  * Creates puzzle representations from a named type, with named banks of

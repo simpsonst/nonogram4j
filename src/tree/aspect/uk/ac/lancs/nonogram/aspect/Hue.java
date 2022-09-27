@@ -33,27 +33,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package uk.ac.lancs.nonogram;
+package uk.ac.lancs.nonogram.aspect;
 
 /**
- * Identifies the shape of a tile.
+ * Indexes tiles based on current state.
  * 
  * @author simpsons
  */
-public enum Shape {
-    /**
-     * The cell is filled with the background colour.
-     */
-    BLANK,
+public class Hue {
+    private Hue() {}
 
     /**
-     * The cell is filled with the background colour, and a dot or small
-     * circle is drawn within it in the foreground colour.
+     * Get a distinct state that equals no other.
+     * 
+     * @return a distinct state
      */
-    DOT,
+    public static Hue distinct() {
+        return new Hue() {
+            @Override
+            public String toString() {
+                return "distinct";
+            }
+        };
+    }
 
     /**
-     * The cell is filled with the foreground colour.
+     * Represents a cell in an indeterminate state.
      */
-    SOLID;
+    public static final Hue UNKNOWN = new Hue() {
+        @Override
+        public String toString() {
+            return "unknown";
+        }
+    };
+
+    /**
+     * Represents a cell known to be in the background colour.
+     */
+    public static final Hue BACKGROUND = new Hue() {
+        @Override
+        public String toString() {
+            return "background";
+        }
+    };
 }

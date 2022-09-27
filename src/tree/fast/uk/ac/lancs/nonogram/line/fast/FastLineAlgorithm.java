@@ -37,7 +37,7 @@ package uk.ac.lancs.nonogram.line.fast;
 
 import java.util.BitSet;
 import java.util.List;
-import uk.ac.lancs.nonogram.IndexedBlock;
+import uk.ac.lancs.nonogram.Block;
 import uk.ac.lancs.nonogram.line.LineAlgorithm;
 import uk.ac.lancs.nonogram.line.LineSolver;
 import uk.ac.lancs.nonogram.line.LineWorkUnit;
@@ -79,11 +79,11 @@ public final class FastLineAlgorithm implements LineAlgorithm {
      * @return true if an inconsistency was found
      */
     public static boolean push(int[] min, List<? extends BitSet> cells,
-                               List<? extends IndexedBlock> clue) {
+                               List<? extends Block> clue) {
         final int clueLength = clue.size();
         final int lineLength = cells.size();
-        final IndexedBlock[] blocks =
-            clue.toArray(new IndexedBlock[clueLength]);
+        final Block[] blocks =
+            clue.toArray(new Block[clueLength]);
         min[0] = 0;
 
         int colours = 2;

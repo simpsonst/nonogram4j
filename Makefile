@@ -55,6 +55,9 @@ jars += tests
 SELECTED_JARS += nonogram4j_lib
 trees_nonogram4j_lib += lib
 
+SELECTED_JARS += nonogram4j_aspect
+trees_nonogram4j_aspect += aspect
+
 SELECTED_JARS += nonogram4j_solver
 trees_nonogram4j_solver += solver
 
@@ -68,6 +71,9 @@ statics_lib += uk/ac/lancs/nonogram/CharacterEntities.properties
 roots_line=$(found_line)
 deps_line += lib
 
+roots_aspect=$(found_aspect)
+deps_aspect += lib
+
 roots_fast=$(found_fast)
 deps_fast += line
 deps_fast += util
@@ -78,16 +84,19 @@ roots_fcomp=$(found_fcomp)
 
 roots_geom=$(found_geom)
 deps_geom += lib
+deps_geom += aspect
 
 roots_heuristic=$(found_heuristic)
 deps_heuristic += lib
 
 roots_rect=$(found_rect)
 deps_rect += lib
+deps_rect += aspect
 deps_rect += geom
 
 roots_solver=$(found_solver)
 deps_solver += lib
+deps_solver += aspect
 deps_solver += line
 deps_solver += heuristic
 deps_solver += geom
@@ -124,6 +133,7 @@ DOC_PKGS += uk.ac.lancs.nonogram.line
 DOC_PKGS += uk.ac.lancs.nonogram.util
 DOC_PKGS += uk.ac.lancs.nonogram.plugin
 DOC_PKGS += uk.ac.lancs.nonogram
+DOC_PKGS += uk.ac.lancs.nonogram.aspect
 DOC_PKGS += uk.ac.lancs.nonogram.line.heuristic
 DOC_PKGS += uk.ac.lancs.nonogram.line.fast
 DOC_PKGS += uk.ac.lancs.nonogram.geom

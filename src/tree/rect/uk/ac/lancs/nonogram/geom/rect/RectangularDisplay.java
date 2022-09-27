@@ -43,8 +43,8 @@ import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import uk.ac.lancs.nonogram.Palette;
-import uk.ac.lancs.nonogram.Tile;
+import uk.ac.lancs.nonogram.aspect.Palette;
+import uk.ac.lancs.nonogram.aspect.Tile;
 import uk.ac.lancs.nonogram.geom.Display;
 import uk.ac.lancs.nonogram.geom.WidgetDisplay;
 

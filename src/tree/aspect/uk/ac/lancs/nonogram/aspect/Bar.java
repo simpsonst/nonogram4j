@@ -33,101 +33,92 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package uk.ac.lancs.nonogram;
+package uk.ac.lancs.nonogram.aspect;
 
+import java.util.Objects;
 import java.util.function.Function;
 import uk.ac.lancs.nonogram.Block;
-import uk.ac.lancs.nonogram.Hue;
 
 /**
- * Describes a block by its length and colour index.
+ * Represents a coloured block in a Nonogram clue.
  * 
  * @author simpsons
  */
-public final class IndexedBlock {
+public final class Bar {
+    /**
+     * Map block with abstract colour to one with indexed colour.
+     *
+     * @param block the block to convert
+     *
+     * @param mapping the mapping from abstract colour to index,
+     * returning a positive integer on success
+     *
+     * @return the new block
+     *
+     * @throws IllegalArgumentException if the block's colour is
+     * unrecognized by the mapping
+     */
+    public static Block
+        of(Bar block, Function<? super Hue, ? extends Number> mapping) {
+        int color = mapping.apply(block.color).intValue();
+        if (color < 1)
+            throw new IllegalArgumentException("bad block color " + block);
+        return Block.of(block.length, color);
+    }
+
     /**
      * Specifies the block's length. This is always a positive value.
+     * 
+     * @resume The length of the block
      */
     public final int length;
 
     /**
-     * Specifies the block's colour. As the background colour is always
-     * zero, and no block ever uses the background colour, this can
-     * never be zero. A colour index is always positive.
+     * Specifies the block's colour.
+     * 
+     * @resume The colour of the block
      */
-    public final int color;
+    public final Hue color;
 
-    private IndexedBlock(int length, int color) {
+    private Bar(int length, Hue color) {
         assert length >= 1;
-        assert color >= 1;
+        assert color != null;
+        assert color != Hue.BACKGROUND;
+        assert color != Hue.UNKNOWN;
         this.length = length;
         this.color = color;
     }
 
     /**
-     * Map block with abstract colour to one with indexed colour.
+     * Create a block of a given length and colour.
      * 
-     * @param block the block to convert
+     * @param length the block's length, a positive integer
      * 
-     * @param mapping the mapping from abstract colour to index,
-     * returning a positive integer on success
-     * 
-     * @return the new block
-     * 
-     * @throws IllegalArgumentException if the block's colour is
-     * unrecognized by the mapping
-     */
-    public static IndexedBlock
-        of(Block block, Function<? super Hue, ? extends Number> mapping) {
-        int color = mapping.apply(block.color).intValue();
-        if (color < 1)
-            throw new IllegalArgumentException("bad block color " + block);
-        return new IndexedBlock(block.length, color);
-    }
-
-    /**
-     * Create a block with indexed colour.
-     * 
-     * @param length the block length
-     * 
-     * @param color the index of the block's colour
+     * @param color the block's colour, a positive integer
      * 
      * @return the new block
      * 
-     * @throws IllegalArgumentException if the length is not positive or
-     * the colour index is not positive
+     * @throws IllegalArgumentException if the length or colour are
+     * invalid
+     * 
+     * @throws NullPointerException if the colour is {@code null}
      */
-    public static IndexedBlock of(int length, int color) {
+    public static Bar of(int length, Hue color) {
         if (length < 1)
             throw new IllegalArgumentException("Illegal block length "
                 + length);
-        if (color < 1)
-            throw new IllegalArgumentException("Illegal block color index "
-                + color);
-        return new IndexedBlock(length, color);
-    }
-
-    /**
-     * Create a block with the main foreground colour.
-     * 
-     * @param length the block length
-     * 
-     * @return the new block
-     * 
-     * @throws IllegalArgumentException if the length is not positive or
-     * the colour index is not positive
-     */
-    public static IndexedBlock of(int length) {
-        if (length < 1)
-            throw new IllegalArgumentException("Illegal block length "
-                + length);
-        return new IndexedBlock(length, 1);
+        Objects.requireNonNull(color, "color");
+        if (color == Hue.BACKGROUND)
+            throw new IllegalArgumentException("Illegal color (background)");
+        if (color == Hue.UNKNOWN)
+            throw new IllegalArgumentException("Illegal color (unknown)");
+        return new Bar(length, color);
     }
 
     /**
      * Get a string representation of this block.
      * 
-     * @return the string representation
+     * @return the string representation of this block
      */
     @Override
     public String toString() {
@@ -141,10 +132,11 @@ public final class IndexedBlock {
      */
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 47 * hash + this.length;
-        hash = 47 * hash + this.color;
-        return hash;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + color.hashCode();
+        result = prime * result + length;
+        return result;
     }
 
     /**
@@ -159,9 +151,10 @@ public final class IndexedBlock {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-        final IndexedBlock other = (IndexedBlock) obj;
-        if (this.length != other.length) return false;
-        return this.color == other.color;
+        if (!(obj instanceof Bar)) return false;
+        Bar other = (Bar) obj;
+        if (color != other.color) return false;
+        if (length != other.length) return false;
+        return true;
     }
 }

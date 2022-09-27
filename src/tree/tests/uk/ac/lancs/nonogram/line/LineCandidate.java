@@ -2,7 +2,7 @@
 
 package uk.ac.lancs.nonogram.line;
 
-import uk.ac.lancs.nonogram.IndexedBlock;
+import uk.ac.lancs.nonogram.Block;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -21,26 +21,26 @@ public class LineCandidate {
 
     public final List<BitSet> broken;
 
-    public final List<IndexedBlock> clue;
+    public final List<Block> clue;
 
     private LineCandidate(List<BitSet> complete, List<BitSet> broken,
-                          List<IndexedBlock> clue) {
+                          List<Block> clue) {
         this.complete = complete;
         this.broken = broken;
         this.clue = clue;
     }
 
-    public static List<IndexedBlock> createMonochromeClue(int... lengths) {
-        List<IndexedBlock> result = new ArrayList<>(lengths.length);
+    public static List<Block> createMonochromeClue(int... lengths) {
+        List<Block> result = new ArrayList<>(lengths.length);
         for (int len : lengths)
-            result.add(IndexedBlock.of(len));
+            result.add(Block.of(len));
         return Collections.unmodifiableList(result);
     }
 
-    public static List<IndexedBlock> createClue(int... data) {
-        List<IndexedBlock> result = new ArrayList<>((data.length + 1) / 2);
+    public static List<Block> createClue(int... data) {
+        List<Block> result = new ArrayList<>((data.length + 1) / 2);
         for (int i = 0; i < data.length; i += 2)
-            result.add(IndexedBlock.of(data[i], data[i + 1]));
+            result.add(Block.of(data[i], data[i + 1]));
         return Collections.unmodifiableList(result);
     }
 
@@ -49,9 +49,9 @@ public class LineCandidate {
     private static final Pattern BLOCK_DESCRIPTOR =
         Pattern.compile("([0-9]+)(.?)");
 
-    public static List<IndexedBlock> createClue(String source) {
+    public static List<Block> createClue(String source) {
         String[] parts = BLOCK_SEPARATOR.split(source);
-        List<IndexedBlock> result = new ArrayList<>(parts.length);
+        List<Block> result = new ArrayList<>(parts.length);
         Map<String, Integer> colors = new HashMap<>();
         for (String part : parts) {
             Matcher m = BLOCK_DESCRIPTOR.matcher(part);
@@ -65,7 +65,7 @@ public class LineCandidate {
                 colors.put(code, color);
             }
             final int length = Integer.parseInt(m.group(1));
-            final IndexedBlock block = IndexedBlock.of(length, color);
+            final Block block = Block.of(length, color);
             result.add(block);
         }
         return Collections.unmodifiableList(result);
@@ -116,8 +116,8 @@ public class LineCandidate {
         return Arrays.asList(complete);
     }
 
-    public static List<IndexedBlock> createClue(List<? extends BitSet> cells) {
-        List<IndexedBlock> result = new ArrayList<>();
+    public static List<Block> createClue(List<? extends BitSet> cells) {
+        List<Block> result = new ArrayList<>();
         int color = -1;
         int start = 0;
         int pos = 0;
@@ -127,13 +127,13 @@ public class LineCandidate {
                     + pos);
             int newCol = cell.nextSetBit(0);
             if (newCol != color) {
-                if (color > 0) result.add(IndexedBlock.of(pos - start, color));
+                if (color > 0) result.add(Block.of(pos - start, color));
                 start = pos;
                 color = newCol;
             }
             pos++;
         }
-        if (color > 0) result.add(IndexedBlock.of(pos - start, color));
+        if (color > 0) result.add(Block.of(pos - start, color));
         return result;
     }
 
@@ -175,7 +175,7 @@ public class LineCandidate {
     public static LineCandidate createCandidate(Random rng, final int colours,
                                                 final int length) {
         List<BitSet> complete = createLine(rng, colours, length);
-        List<IndexedBlock> clue = createClue(complete);
+        List<Block> clue = createClue(complete);
         List<BitSet> broken = breakLine(rng, copyLine(complete));
 
         return new LineCandidate(Collections.unmodifiableList(complete),
@@ -185,7 +185,7 @@ public class LineCandidate {
 
     public static LineCandidate createCandidate(Random rng, String source) {
         List<BitSet> complete = createLine(source);
-        List<IndexedBlock> clue = createClue(complete);
+        List<Block> clue = createClue(complete);
         List<BitSet> broken = breakLine(rng, copyLine(complete));
 
         return new LineCandidate(Collections.unmodifiableList(complete),
@@ -195,7 +195,7 @@ public class LineCandidate {
 
     public static LineCandidate createCandidate(String source, String pattern) {
         List<BitSet> complete = createLine(source);
-        List<IndexedBlock> clue = createClue(complete);
+        List<Block> clue = createClue(complete);
         List<BitSet> broken = breakLine(pattern, copyLine(complete));
 
         return new LineCandidate(Collections.unmodifiableList(complete),
@@ -207,10 +207,10 @@ public class LineCandidate {
     private static final String COLOURS =
         "-#123456789ABCDEDFGHIJKLMNOPQRSTUVWXYZ";
 
-    public static String clueToString(List<? extends IndexedBlock> clue) {
+    public static String clueToString(List<? extends Block> clue) {
         StringBuilder out = new StringBuilder();
         String sep = "";
-        for (IndexedBlock block : clue) {
+        for (Block block : clue) {
             out.append(sep);
             sep = ",";
             out.append(block.length);

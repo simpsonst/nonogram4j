@@ -6,7 +6,7 @@ import java.util.BitSet;
 import java.util.List;
 import junit.framework.TestCase;
 import org.junit.Test;
-import uk.ac.lancs.nonogram.IndexedBlock;
+import uk.ac.lancs.nonogram.Block;
 import uk.ac.lancs.nonogram.line.LineCandidate;
 import static uk.ac.lancs.nonogram.line.LineCandidate.createClue;
 import static uk.ac.lancs.nonogram.line.LineCandidate.createLine;
@@ -17,7 +17,7 @@ public final class TestLine extends TestCase {
         assertEquals(expected, LineCandidate.cellsToString(createLine(source)));
     }
 
-    private static void testPush(List<BitSet> cells, List<IndexedBlock> clue,
+    private static void testPush(List<BitSet> cells, List<Block> clue,
                                  int... expected) {
         String prefix = LineCandidate.cellsToString(cells) + ' '
             + LineCandidate.clueToString(clue);
@@ -58,13 +58,13 @@ public final class TestLine extends TestCase {
         List<BitSet> cells2 = createLine("----           --#-");
         List<BitSet> cells3 = createLine("---- #      R  ----", 3);
 
-        List<IndexedBlock> clue1 = createClue("6");
-        List<IndexedBlock> clue2 = createClue("6,4");
-        List<IndexedBlock> clue3 = createClue("6,5");
-        List<IndexedBlock> clue4 = createClue("6,4,1");
-        List<IndexedBlock> clue5 = createClue("6,2,1");
-        List<IndexedBlock> clue6 = createClue("6,2R,1");
-        List<IndexedBlock> clue7 = createClue("6,2R,1R,1");
+        List<Block> clue1 = createClue("6");
+        List<Block> clue2 = createClue("6,4");
+        List<Block> clue3 = createClue("6,5");
+        List<Block> clue4 = createClue("6,4,1");
+        List<Block> clue5 = createClue("6,2,1");
+        List<Block> clue6 = createClue("6,2R,1");
+        List<Block> clue7 = createClue("6,2R,1R,1");
 
         testPush(cells1, clue1, 4);
         testPush(cells1, clue2, 4, 11);

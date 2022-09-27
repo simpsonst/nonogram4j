@@ -33,7 +33,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package uk.ac.lancs.nonogram;
+package uk.ac.lancs.nonogram.aspect;
 
 import java.util.Collection;
 import java.util.List;
@@ -47,7 +47,7 @@ import java.util.Objects;
  * @author simpsons
  */
 public final class Clue {
-    private final List<Block> blocks;
+    private final List<Bar> blocks;
 
     /**
      * Get the blocks constraining the state of a line.
@@ -55,11 +55,11 @@ public final class Clue {
      * @return a list of the lengths and colours of the blocks, or
      * {@code null} if not defined
      */
-    public List<Block> blocks() {
+    public List<Bar> blocks() {
         return blocks;
     }
 
-    private Clue(List<Block> blocks) {
+    private Clue(List<Bar> blocks) {
         this.blocks = blocks;
     }
 
@@ -85,7 +85,7 @@ public final class Clue {
      * 
      * @return the requested clue
      */
-    public static Clue of(Collection<? extends Block> blocks) {
+    public static Clue of(Collection<? extends Bar> blocks) {
         return new Clue(List.copyOf(blocks));
     }
 

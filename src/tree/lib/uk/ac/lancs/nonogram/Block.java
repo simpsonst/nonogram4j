@@ -35,67 +35,74 @@
 
 package uk.ac.lancs.nonogram;
 
-import java.util.Objects;
-
 /**
- * Represents a coloured block in a Nonogram clue.
+ * Describes a block by its length and colour index.
  * 
  * @author simpsons
  */
 public final class Block {
     /**
      * Specifies the block's length. This is always a positive value.
-     * 
-     * @resume The length of the block
      */
     public final int length;
 
     /**
-     * Specifies the block's colour.
-     * 
-     * @resume The colour of the block
+     * Specifies the block's colour. As the background colour is always
+     * zero, and no block ever uses the background colour, this can
+     * never be zero. A colour index is always positive.
      */
-    public final Hue color;
+    public final int color;
 
-    private Block(int length, Hue color) {
+    private Block(int length, int color) {
         assert length >= 1;
-        assert color != null;
-        assert color != Hue.BACKGROUND;
-        assert color != Hue.UNKNOWN;
+        assert color >= 1;
         this.length = length;
         this.color = color;
     }
 
     /**
-     * Create a block of a given length and colour.
+     * Create a block with indexed colour.
      * 
-     * @param length the block's length, a positive integer
+     * @param length the block length
      * 
-     * @param color the block's colour, a positive integer
+     * @param color the index of the block's colour
      * 
      * @return the new block
      * 
-     * @throws IllegalArgumentException if the length or colour are
-     * invalid
-     * 
-     * @throws NullPointerException if the colour is {@code null}
+     * @throws IllegalArgumentException if the length is not positive or
+     * the colour index is not positive
      */
-    public static Block of(int length, Hue color) {
+    public static Block of(int length, int color) {
         if (length < 1)
             throw new IllegalArgumentException("Illegal block length "
                 + length);
-        Objects.requireNonNull(color, "color");
-        if (color == Hue.BACKGROUND)
-            throw new IllegalArgumentException("Illegal color (background)");
-        if (color == Hue.UNKNOWN)
-            throw new IllegalArgumentException("Illegal color (unknown)");
+        if (color < 1)
+            throw new IllegalArgumentException("Illegal block color index "
+                + color);
         return new Block(length, color);
+    }
+
+    /**
+     * Create a block with the main foreground colour.
+     * 
+     * @param length the block length
+     * 
+     * @return the new block
+     * 
+     * @throws IllegalArgumentException if the length is not positive or
+     * the colour index is not positive
+     */
+    public static Block of(int length) {
+        if (length < 1)
+            throw new IllegalArgumentException("Illegal block length "
+                + length);
+        return new Block(length, 1);
     }
 
     /**
      * Get a string representation of this block.
      * 
-     * @return the string representation of this block
+     * @return the string representation
      */
     @Override
     public String toString() {
@@ -109,11 +116,10 @@ public final class Block {
      */
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + color.hashCode();
-        result = prime * result + length;
-        return result;
+        int hash = 3;
+        hash = 47 * hash + this.length;
+        hash = 47 * hash + this.color;
+        return hash;
     }
 
     /**
@@ -128,10 +134,9 @@ public final class Block {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null) return false;
-        if (!(obj instanceof Block)) return false;
-        Block other = (Block) obj;
-        if (color != other.color) return false;
-        if (length != other.length) return false;
-        return true;
+        if (getClass() != obj.getClass()) return false;
+        final Block other = (Block) obj;
+        if (this.length != other.length) return false;
+        return this.color == other.color;
     }
 }
