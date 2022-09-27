@@ -45,4 +45,4 @@
  * @resume An implementation of the ‘fast-complete’ or ‘comprehensive’
  * algorithm
  */
-package uk.ac.lancs.nonogram.fcomp;
+package uk.ac.lancs.nonogram.comprehensive;

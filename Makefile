@@ -49,8 +49,8 @@ trees_nonogram4j_rect += rect
 
 jars += tests
 
-#SELECTED_JARS += nonogram4j_fcomp
-#trees_nonogram4j_fcomp += fcomp
+SELECTED_JARS += nonogram4j_fcomp
+trees_nonogram4j_fcomp += fcomp
 
 SELECTED_JARS += nonogram4j_lib
 trees_nonogram4j_lib += lib
@@ -81,6 +81,10 @@ deps_fast += lib
 deps_fast += heuristic
 
 roots_fcomp=$(found_fcomp)
+deps_fcomp += line
+deps_fcomp += util
+deps_fcomp += lib
+deps_fcomp += heuristic
 
 roots_geom=$(found_geom)
 deps_geom += lib
@@ -136,6 +140,7 @@ DOC_PKGS += uk.ac.lancs.nonogram
 DOC_PKGS += uk.ac.lancs.nonogram.aspect
 DOC_PKGS += uk.ac.lancs.nonogram.line.heuristic
 DOC_PKGS += uk.ac.lancs.nonogram.line.fast
+DOC_PKGS += uk.ac.lancs.nonogram.line.comprehensive
 DOC_PKGS += uk.ac.lancs.nonogram.geom
 DOC_PKGS += uk.ac.lancs.nonogram.geom.rect
 
