@@ -32,6 +32,9 @@ jars += $(SELECTED_JARS)
 SELECTED_JARS += nonogram4j_util
 trees_nonogram4j_util += util
 
+SELECTED_JARS += nonogram4j_layout
+trees_nonogram4j_layout += layout
+
 SELECTED_JARS += nonogram4j_line
 trees_nonogram4j_line += line
 
@@ -65,18 +68,22 @@ trees_nonogram4j_solver += solver
 test_suite += uk.ac.lancs.nonogram.TestUtils
 test_suite += uk.ac.lancs.nonogram.line.fast.TestLine
 
+roots_layout=$(found_layout)
+
 roots_lib=$(found_lib)
-statics_lib += uk/ac/lancs/nonogram/CharacterEntities.properties
 
 roots_line=$(found_line)
+deps_line += layout
 deps_line += lib
 
 roots_aspect=$(found_aspect)
-deps_aspect += lib
+statics_aspect += uk/ac/lancs/nonogram/aspect/CharacterEntities.properties
+deps_aspect += layout
 
 roots_fast=$(found_fast)
 deps_fast += line
 deps_fast += util
+deps_fast += layout
 deps_fast += lib
 deps_fast += heuristic
 
@@ -87,18 +94,22 @@ deps_fcomp += lib
 deps_fcomp += heuristic
 
 roots_geom=$(found_geom)
+deps_geom += layout
 deps_geom += lib
 deps_geom += aspect
 
 roots_heuristic=$(found_heuristic)
+deps_heuristic += layout
 deps_heuristic += lib
 
 roots_rect=$(found_rect)
+deps_rect += layout
 deps_rect += lib
 deps_rect += aspect
 deps_rect += geom
 
 roots_solver=$(found_solver)
+deps_solver += layout
 deps_solver += lib
 deps_solver += aspect
 deps_solver += line
