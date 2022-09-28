@@ -39,18 +39,18 @@ import java.util.BitSet;
 import java.util.concurrent.atomic.AtomicReference;
 import uk.ac.lancs.nonogram.line.LineAlgorithm;
 import uk.ac.lancs.nonogram.line.LineSolver;
-import uk.ac.lancs.nonogram.line.LineWorkUnit;
+import uk.ac.lancs.nonogram.line.LineChallenge;
 import uk.ac.lancs.nonogram.util.ReversedList;
 
 final class FastLineSolver implements LineSolver {
-    private final LineWorkUnit line;
+    private final LineChallenge line;
 
     /**
      * Create a fast line solver.
      * 
      * @param line the line to be solved
      */
-    public FastLineSolver(LineWorkUnit line) {
+    public FastLineSolver(LineChallenge line) {
         this.line = line;
     }
 

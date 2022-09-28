@@ -40,7 +40,7 @@ import java.util.List;
 import uk.ac.lancs.nonogram.Block;
 import uk.ac.lancs.nonogram.line.LineAlgorithm;
 import uk.ac.lancs.nonogram.line.LineSolver;
-import uk.ac.lancs.nonogram.line.LineWorkUnit;
+import uk.ac.lancs.nonogram.line.LineChallenge;
 
 /**
  * Implements the ‘fast’ line-solving algorithm. This uses the method
@@ -61,7 +61,7 @@ public final class FastLineAlgorithm implements LineAlgorithm {
     public static final String ALGORITHM_TYPE = "fast";
 
     @Override
-    public LineSolver prepare(LineWorkUnit line) {
+    public LineSolver prepare(LineChallenge line) {
         return new FastLineSolver(line);
     }
 

@@ -52,7 +52,7 @@ import uk.ac.lancs.nonogram.geom.DisplayFactory;
 import uk.ac.lancs.nonogram.line.Cache;
 import uk.ac.lancs.nonogram.line.LineSolver;
 import uk.ac.lancs.nonogram.line.LineSolver.Result;
-import uk.ac.lancs.nonogram.line.LineWorkUnit;
+import uk.ac.lancs.nonogram.line.LineChallenge;
 import uk.ac.lancs.nonogram.line.heuristic.LineHeuristic;
 
 /**
@@ -456,7 +456,7 @@ public final class Grid {
 
     private static final LineJob INVALID_JOB = new LineJob() {
         @Override
-        public LineWorkUnit getLine() {
+        public LineChallenge getLine() {
             throw new UnsupportedOperationException();
         }
 
@@ -521,8 +521,8 @@ public final class Grid {
                 .filter(i -> i != lineNumber).forEach(i -> locks[i]++);
             workingState.add(state);
         }
-        final LineWorkUnit line =
-            new LineWorkUnit(colors, lineGeom.clue(), workingState,
+        final LineChallenge line =
+            new LineChallenge(colors, lineGeom.clue(), workingState,
                              caches[lineNumber]);
 
         lineActivity.set(lineNumber);
@@ -546,7 +546,7 @@ public final class Grid {
             }
 
             @Override
-            public LineWorkUnit getLine() {
+            public LineChallenge getLine() {
                 return line;
             }
 

@@ -50,5 +50,5 @@ public interface LineAlgorithm {
      * 
      * @return a new solver with fresh state
      */
-    LineSolver prepare(LineWorkUnit line);
+    LineSolver prepare(LineChallenge line);
 }

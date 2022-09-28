@@ -45,7 +45,7 @@ import java.util.List;
  * 
  * @author simpsons
  */
-public class LineWorkUnit {
+public class LineChallenge {
     /**
      * @resume The number of colours in the puzzle
      */
@@ -91,7 +91,7 @@ public class LineWorkUnit {
      * @param cache the cache of line-solver states pertaining to this
      * line
      */
-    public LineWorkUnit(int colors, List<Block> clue, List<BitSet> cells,
+    public LineChallenge(int colors, List<Block> clue, List<BitSet> cells,
                         Cache cache) {
         this.colors = colors;
         this.cells = Collections.unmodifiableList(cells);

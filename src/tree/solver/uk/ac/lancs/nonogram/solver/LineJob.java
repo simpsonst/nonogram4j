@@ -37,7 +37,7 @@ package uk.ac.lancs.nonogram.solver;
 
 import uk.ac.lancs.nonogram.line.LineSolver;
 import uk.ac.lancs.nonogram.line.LineSolver.Result;
-import uk.ac.lancs.nonogram.line.LineWorkUnit;
+import uk.ac.lancs.nonogram.line.LineChallenge;
 
 /**
  * Grids provide jobs as records of their activity. A job includes a
@@ -77,7 +77,7 @@ public interface LineJob extends AutoCloseable {
      * 
      * @return a representation of the line
      */
-    LineWorkUnit getLine();
+    LineChallenge getLine();
 
     /**
      * Get the identifier for the algorithm that should work on this
