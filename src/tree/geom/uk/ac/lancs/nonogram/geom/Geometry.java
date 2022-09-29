@@ -103,6 +103,66 @@ public interface Geometry {
     }
 
     /**
+     * Create a layout from a named geometry type and named banks of
+     * clues.
+     *
+     * @param type the geometry type
+     *
+     * @param banks the puzzle data
+     *
+     * @param colorMap a mapping from cell states to colour indices
+     *
+     * @return a layout for the supplied puzzle
+     *
+     * @throws UnknownPluginException if the configuration string
+     * matches no known plug-in
+     *
+     * @throws PluginException if some other exception occurred
+     *
+     * @see GeometryLoader The service type sought by this method
+     */
+    public static DisplayableLayout
+        makeLayout(String type,
+                   Function<? super Hue, ? extends Number> colorMap,
+                   Map<? extends String, List<? extends Clue>> banks)
+            throws PluginException {
+        Geometry factory = findGeometry(type);
+        return factory.createLayout(type, colorMap, banks);
+    }
+
+    /**
+     * Create a layout from a named geometry type and named banks of
+     * clues, using a given class loader.
+     *
+     * @param type the geometry type
+     *
+     * @param banks the puzzle data
+     *
+     * @param colorMap a mapping from cell states to colour indices
+     *
+     * @param classLoader the class loader used to find puzzle-geometry
+     * plug-ins
+     *
+     * @return a layout for the supplied puzzle
+     *
+     * @throws UnknownPluginException if the configuration string
+     * matches no known plug-in
+     *
+     * @throws PluginException if some other exception occurred
+     *
+     * @see GeometryLoader The service type sought by this method
+     */
+    public static DisplayableLayout
+        makeLayout(String type,
+                   Function<? super Hue, ? extends Number> colorMap,
+                   Map<? extends String, List<? extends Clue>> banks,
+                   ClassLoader classLoader)
+            throws PluginException {
+        Geometry factory = findGeometry(type, classLoader);
+        return factory.createLayout(type, colorMap, banks);
+    }
+
+    /**
      * Create a puzzle geometry from puzzle data. A particular geometry
      * will require several named banks of data. For example, a
      * rectangular puzzle requires <samp>rows</samp> and
