@@ -33,10 +33,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package uk.ac.lancs.nonogram;
+package uk.ac.lancs.nonogram.clue;
 
 /**
- * Describes a block by its length and colour index.
+ * Describes a block by its length and colour index. In the internal
+ * representation of a puzzle, colour 0 indicates the background colour,
+ * which a block can never be. Other colours are represented by positive
+ * integers.
  * 
  * @author simpsons
  */

@@ -2,7 +2,7 @@
 
 package uk.ac.lancs.nonogram.line;
 
-import uk.ac.lancs.nonogram.Block;
+import uk.ac.lancs.nonogram.clue.Block;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;

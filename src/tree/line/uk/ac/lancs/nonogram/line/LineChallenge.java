@@ -35,7 +35,7 @@
 
 package uk.ac.lancs.nonogram.line;
 
-import uk.ac.lancs.nonogram.Block;
+import uk.ac.lancs.nonogram.clue.Block;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.List;

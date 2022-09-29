@@ -37,7 +37,7 @@ package uk.ac.lancs.nonogram.line.fast;
 
 import java.util.BitSet;
 import java.util.List;
-import uk.ac.lancs.nonogram.Block;
+import uk.ac.lancs.nonogram.clue.Block;
 import uk.ac.lancs.nonogram.line.LineAlgorithm;
 import uk.ac.lancs.nonogram.line.LineSolver;
 import uk.ac.lancs.nonogram.line.LineChallenge;

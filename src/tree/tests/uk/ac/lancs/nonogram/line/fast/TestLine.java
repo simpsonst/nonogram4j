@@ -6,7 +6,7 @@ import java.util.BitSet;
 import java.util.List;
 import junit.framework.TestCase;
 import org.junit.Test;
-import uk.ac.lancs.nonogram.Block;
+import uk.ac.lancs.nonogram.clue.Block;
 import uk.ac.lancs.nonogram.line.LineCandidate;
 import static uk.ac.lancs.nonogram.line.LineCandidate.createClue;
 import static uk.ac.lancs.nonogram.line.LineCandidate.createLine;

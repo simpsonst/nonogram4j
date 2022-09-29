@@ -37,7 +37,7 @@ package uk.ac.lancs.nonogram.aspect;
 
 import java.util.Objects;
 import java.util.function.Function;
-import uk.ac.lancs.nonogram.Block;
+import uk.ac.lancs.nonogram.clue.Block;
 
 /**
  * Represents a coloured block in a Nonogram clue.

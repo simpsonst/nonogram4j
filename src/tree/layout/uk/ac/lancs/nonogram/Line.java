@@ -2,6 +2,7 @@
 
 package uk.ac.lancs.nonogram;
 
+import uk.ac.lancs.nonogram.clue.Block;
 import java.util.List;
 
 /**

@@ -36,7 +36,7 @@
 package uk.ac.lancs.nonogram.line.heuristic;
 
 import java.util.List;
-import uk.ac.lancs.nonogram.Block;
+import uk.ac.lancs.nonogram.clue.Block;
 import uk.ac.lancs.nonogram.plugin.PluginException;
 import uk.ac.lancs.nonogram.plugin.PluginLoader;
 
