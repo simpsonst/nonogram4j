@@ -35,7 +35,7 @@
 
 package uk.ac.lancs.nonogram.geom;
 
-import uk.ac.lancs.nonogram.Layout;
+import uk.ac.lancs.nonogram.layout.Layout;
 
 /**
  * @resume A puzzle layout capable of generating displays of different

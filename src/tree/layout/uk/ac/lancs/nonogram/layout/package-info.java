@@ -48,5 +48,5 @@
  * has not yet been eliminated, bit 1 if colour 2, and so on.
  * {@link Cell} includes static methods for manipulating such states.
  */
-package uk.ac.lancs.nonogram;
+package uk.ac.lancs.nonogram.layout;
 

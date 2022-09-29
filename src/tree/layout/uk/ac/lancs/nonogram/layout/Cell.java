@@ -33,7 +33,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package uk.ac.lancs.nonogram;
+package uk.ac.lancs.nonogram.layout;
 
 import java.util.BitSet;
 import java.util.NavigableMap;

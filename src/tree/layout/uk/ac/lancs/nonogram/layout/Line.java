@@ -1,6 +1,6 @@
 // -*- c-basic-offset: 4; indent-tabs-mode: nil -*-
 
-package uk.ac.lancs.nonogram;
+package uk.ac.lancs.nonogram.layout;
 
 import uk.ac.lancs.nonogram.clue.Block;
 import java.util.List;
