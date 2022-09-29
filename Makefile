@@ -53,6 +53,9 @@ trees_nonogram4j_fast += fast
 SELECTED_JARS += nonogram4j_rect
 trees_nonogram4j_rect += rect
 
+SELECTED_JARS += nonogram4j_swing
+trees_nonogram4j_swing += swing
+
 jars += tests
 
 SELECTED_JARS += nonogram4j_fcomp
@@ -70,6 +73,10 @@ trees_nonogram4j_solver += solver
 
 test_suite += uk.ac.lancs.nonogram.TestUtils
 test_suite += uk.ac.lancs.nonogram.line.fast.TestLine
+
+roots_swing=$(found_swing)
+deps_swing += geom
+deps_swing += solver
 
 roots_clue=$(found_clue)
 
