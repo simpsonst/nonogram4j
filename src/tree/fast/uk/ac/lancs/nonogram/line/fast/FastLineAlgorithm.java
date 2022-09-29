@@ -39,8 +39,8 @@ import java.util.BitSet;
 import java.util.List;
 import uk.ac.lancs.nonogram.clue.Block;
 import uk.ac.lancs.nonogram.line.LineAlgorithm;
-import uk.ac.lancs.nonogram.line.LineSolver;
 import uk.ac.lancs.nonogram.line.LineChallenge;
+import uk.ac.lancs.nonogram.line.LineSolver;
 
 /**
  * Implements the ‘fast’ line-solving algorithm. This uses the method
@@ -82,17 +82,16 @@ public final class FastLineAlgorithm implements LineAlgorithm {
                                List<? extends Block> clue) {
         final int clueLength = clue.size();
         final int lineLength = cells.size();
-        final Block[] blocks =
-            clue.toArray(new Block[clueLength]);
+        final Block[] blocks = clue.toArray(new Block[clueLength]);
         min[0] = 0;
 
-        int colours = 2;
+        int colors = 2;
         System.err.println();
-        for (int colour = 0; colour < colours; colour++) {
+        for (int color = 0; color < colors; color++) {
             for (BitSet cell : cells) {
-                if (cell.length() > colours) colours = cell.length();
-                if (cell.get(colour))
-                    System.err.print(colour);
+                if (cell.length() > colors) colors = cell.length();
+                if (cell.get(color))
+                    System.err.print(color);
                 else
                     System.err.print('-');
             }
@@ -102,7 +101,7 @@ public final class FastLineAlgorithm implements LineAlgorithm {
         /* This indicates the current block (with its color), and a
          * solution is found when it reaches the clue length. */
         int block = 0;
-        int colour = blocks[block].color;
+        int color = blocks[block].color;
         int length = blocks[block].length;
 
         /* To start with, we need to check that the first block is not
@@ -134,9 +133,9 @@ public final class FastLineAlgorithm implements LineAlgorithm {
                 System.err.println();
             }
             System.err.printf("Block: %d (%d of C%d) at %d%n", block, length,
-                              colour, min[block]);
+                              color, min[block]);
             System.err.printf("Slide %d; Check %d%n", slide, check);
-            assert colour == blocks[block].color;
+            assert color == blocks[block].color;
             assert length == blocks[block].length;
             assert slide > 0 || check > 0;
 
@@ -170,7 +169,7 @@ public final class FastLineAlgorithm implements LineAlgorithm {
                         /* Fail if we can't find a suitable earlier
                          * block. */
                         if (block < 0) return true;
-                        colour = blocks[block].color;
+                        color = blocks[block].color;
                         length = blocks[block].length;
                         slide = newEnd + 1 - length - min[block];
                         check = 0;
@@ -197,7 +196,7 @@ public final class FastLineAlgorithm implements LineAlgorithm {
                                              min[block] + length)) {
                 slide++;
                 check--;
-                if (!cell.get(colour)) {
+                if (!cell.get(color)) {
                     /* The cell covered by this block can't be of the
                      * block's color. We must ask it to skip over enough
                      * cells to avoid it. */
@@ -229,7 +228,7 @@ public final class FastLineAlgorithm implements LineAlgorithm {
                         }
                         /* We've found a compatible block, so request
                          * that it be slid to cover this cell. */
-                        colour = blocks[block].color;
+                        color = blocks[block].color;
                         length = blocks[block].length;
                         slide = slide + 1 - length - min[block];
                         check = 0;
@@ -242,8 +241,8 @@ public final class FastLineAlgorithm implements LineAlgorithm {
             }
             block = nextBlock;
 
-            final int nextColour = blocks[block].color;
-            if (nextColour == colour) {
+            final int nextColor = blocks[block].color;
+            if (nextColor == color) {
                 /* Being of the same color, the next block must have a
                  * gap before it. */
                 final int gap = min[block - 1] + length;
@@ -262,7 +261,7 @@ public final class FastLineAlgorithm implements LineAlgorithm {
 
                     /* We found a block. Make it skip enough cells to
                      * cover the gap. */
-                    colour = blocks[block].color;
+                    color = blocks[block].color;
                     length = blocks[block].length;
                     slide = gap + 1 - length - min[block];
                     check = 0;
@@ -272,13 +271,13 @@ public final class FastLineAlgorithm implements LineAlgorithm {
                 /* The next block is a different color, so it can be
                  * adjacent to the current one. */
                 min[block] = min[block - 1] + length;
-                colour = nextColour;
+                color = nextColor;
             }
 
             /* The next block in its new position must be checked in
              * full. */
             length = blocks[block].length;
-            assert colour == blocks[block].color;
+            assert color == blocks[block].color;
             check = length;
             slide = 0;
         }
