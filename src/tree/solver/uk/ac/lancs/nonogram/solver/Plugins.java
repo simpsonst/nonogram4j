@@ -39,18 +39,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.function.Function;
+import uk.ac.lancs.nonogram.Layout;
 import uk.ac.lancs.nonogram.aspect.Clue;
 import uk.ac.lancs.nonogram.aspect.Hue;
 import uk.ac.lancs.nonogram.geom.Geometry;
 import uk.ac.lancs.nonogram.geom.GeometryLoader;
-import uk.ac.lancs.nonogram.Layout;
-import uk.ac.lancs.nonogram.line.LineAlgorithm;
-import uk.ac.lancs.nonogram.line.LineAlgorithmLoader;
-import uk.ac.lancs.nonogram.line.heuristic.LineHeuristic;
-import uk.ac.lancs.nonogram.line.heuristic.LineHeuristicLoader;
-import uk.ac.lancs.nonogram.plugin.PluginConfigurationException;
 import uk.ac.lancs.nonogram.plugin.PluginException;
-import uk.ac.lancs.nonogram.plugin.PluginLoader;
 
 /**
  * These methods use {@link ServiceLoader#load(Class)} or
@@ -64,186 +58,6 @@ import uk.ac.lancs.nonogram.plugin.PluginLoader;
  */
 public final class Plugins {
     private Plugins() {}
-
-    private static <T, L extends PluginLoader<T>> T
-        findPlugin(Class<L> loaderType, String label, String config)
-            throws PluginException {
-        for (L cand : ServiceLoader.load(loaderType)) {
-            T plugin = cand.load(config);
-            if (plugin != null) return plugin;
-        }
-
-        throw new UnknownPluginException(label + ": " + config);
-    }
-
-    private static <T, L extends PluginLoader<T>> T
-        findPlugin(Class<L> loaderType, String label, String config,
-                   ClassLoader classLoader)
-            throws PluginException {
-        for (L cand : ServiceLoader.load(loaderType, classLoader)) {
-            T plugin = cand.load(config);
-            if (plugin != null) return plugin;
-        }
-
-        throw new UnknownPluginException(label + ": " + config);
-    }
-
-    /**
-     * Find a line-solving algorithm, using a plug-in matching the
-     * supplied configuration.
-     * 
-     * @param config a string identifying the plug-in and specifying its
-     * configuration
-     * 
-     * @return the instance supplied by the first matching loader
-     * 
-     * @throws UnknownPluginException if the configuration string
-     * matches no known plug-in
-     * 
-     * @throws PluginConfigurationException if the configuration string
-     * was recognized, but is invalid
-     * 
-     * @throws PluginException if some other exception occurred
-     * 
-     * @see LineAlgorithmLoader The service type sought by this method
-     */
-    public static LineAlgorithm findLineAlgorithm(String config)
-        throws PluginException {
-        return findPlugin(LineAlgorithmLoader.class, "algo", config);
-    }
-
-    /**
-     * Find a line-solving algorithm, using a plug-in from a class
-     * loader, matching the supplied configuration.
-     * 
-     * @param config a string identifying the plug-in and specifying its
-     * configuration
-     * 
-     * @return the instance supplied by the first matching loader
-     * 
-     * @throws UnknownPluginException if the configuration string
-     * matches no known plug-in
-     * 
-     * @throws PluginConfigurationException if the configuration string
-     * was recognized, but is invalid
-     * 
-     * @throws PluginException if some other exception occurred
-     * 
-     * @param classLoader the class loader used to find line-solving
-     * algorithm loaders
-     * 
-     * @see LineAlgorithmLoader The service type sought by this method
-     */
-    public static LineAlgorithm findLineAlgorithm(String config,
-                                                  ClassLoader classLoader)
-        throws PluginException {
-        return findPlugin(LineAlgorithmLoader.class, "algo", config,
-                          classLoader);
-    }
-
-    /**
-     * Find a line-selection heuristic, using a plug-in matching the
-     * supplied configuration.
-     * 
-     * @param config a string identifying the plug-in and specifying its
-     * configuration
-     * 
-     * @return the instance supplied by the first matching loader
-     * 
-     * @throws UnknownPluginException if the configuration string
-     * matches no known plug-in
-     * 
-     * @throws PluginConfigurationException if the configuration string
-     * was recognized, but is invalid
-     * 
-     * @throws PluginException if some other exception occurred
-     * 
-     * @see LineHeuristicLoader The service type sought by this method
-     */
-    public static LineHeuristic findLineHeuristic(String config)
-        throws PluginException {
-        return findPlugin(LineHeuristicLoader.class, "heuristic", config);
-    }
-
-    /**
-     * Find a line-selection heuristic, using a plug-in from a class
-     * loader, matching the supplied configuration.
-     * 
-     * @param config a string identifying the plug-in and specifying its
-     * configuration
-     * 
-     * @return the instance supplied by the first matching loader
-     * 
-     * @throws UnknownPluginException if the configuration string
-     * matches no known plug-in
-     * 
-     * @throws PluginConfigurationException if the configuration string
-     * was recognized, but is invalid
-     * 
-     * @throws PluginException if some other exception occurred
-     * 
-     * @param classLoader the class loader used to find line-selection
-     * heuristics
-     * 
-     * @see LineHeuristicLoader The service type sought by this method
-     */
-    public static LineHeuristic findLineHeuristic(String config,
-                                                  ClassLoader classLoader)
-        throws PluginException {
-        return findPlugin(LineHeuristicLoader.class, "heuristic", config,
-                          classLoader);
-    }
-
-    /**
-     * Find a puzzle geometry, using a plug-in matching the supplied
-     * configuration.
-     * 
-     * @param config a string identifying the plug-in and specifying its
-     * configuration
-     * 
-     * @return the instance supplied by the first matching loader
-     * 
-     * @throws UnknownPluginException if the configuration string
-     * matches no known plug-in
-     * 
-     * @throws PluginConfigurationException if the configuration string
-     * was recognized, but is invalid
-     * 
-     * @throws PluginException if some other exception occurred
-     * 
-     * @see GeometryLoader The service type sought by this method
-     */
-    public static Geometry findGeometry(String config) throws PluginException {
-        return findPlugin(GeometryLoader.class, "geometry", config);
-    }
-
-    /**
-     * Find a puzzle geometry, using a plug-in from a class loader,
-     * matching the supplied configuration.
-     * 
-     * @param config a string identifying the plug-in and specifying its
-     * configuration
-     * 
-     * @return the instance supplied by the first matching loader
-     * 
-     * @throws UnknownPluginException if the configuration string
-     * matches no known plug-in
-     * 
-     * @throws PluginConfigurationException if the configuration string
-     * was recognized, but is invalid
-     * 
-     * @throws PluginException if some other exception occurred
-     * 
-     * @param classLoader the class loader used to find puzzle-geometry
-     * plug-ins
-     * 
-     * @see GeometryLoader The service type sought by this method
-     */
-    public static Geometry findGeometry(String config, ClassLoader classLoader)
-        throws PluginException {
-        return findPlugin(GeometryLoader.class, "geometry", config,
-                          classLoader);
-    }
 
     /**
      * Create a puzzle from a named geometry type and named banks of
@@ -269,7 +83,7 @@ public final class Plugins {
                    Function<? super Hue, ? extends Number> colorMap,
                    Map<? extends String, List<? extends Clue>> banks)
             throws PluginException {
-        Geometry factory = findGeometry(type);
+        Geometry factory = Geometry.findGeometry(type);
         return factory.createLayout(type, colorMap, banks);
     }
 
@@ -301,7 +115,7 @@ public final class Plugins {
                    Map<? extends String, List<? extends Clue>> banks,
                    ClassLoader classLoader)
             throws PluginException {
-        Geometry factory = findGeometry(type, classLoader);
+        Geometry factory = Geometry.findGeometry(type, classLoader);
         return factory.createLayout(type, colorMap, banks);
     }
 }

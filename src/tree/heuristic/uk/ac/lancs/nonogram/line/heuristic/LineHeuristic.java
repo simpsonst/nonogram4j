@@ -36,8 +36,9 @@
 package uk.ac.lancs.nonogram.line.heuristic;
 
 import java.util.List;
-
 import uk.ac.lancs.nonogram.Block;
+import uk.ac.lancs.nonogram.plugin.PluginException;
+import uk.ac.lancs.nonogram.plugin.PluginLoader;
 
 /**
  * Computes a heuristic priority for solving a line.
@@ -45,6 +46,60 @@ import uk.ac.lancs.nonogram.Block;
  * @author simpsons
  */
 public interface LineHeuristic {
+    /**
+     * Find a line-selection heuristic, using a plug-in matching the
+     * supplied configuration.
+     *
+     * @param config a string identifying the plug-in and specifying its
+     * configuration
+     *
+     * @return the instance supplied by the first matching loader
+     *
+     * @throws UnknownPluginException if the configuration string
+     * matches no known plug-in
+     *
+     * @throws PluginConfigurationException if the configuration string
+     * was recognized, but is invalid
+     *
+     * @throws PluginException if some other exception occurred
+     *
+     * @see LineHeuristicLoader The service type sought by this method
+     */
+    public static LineHeuristic findLineHeuristic(String config)
+        throws PluginException {
+        return PluginLoader.findPlugin(LineHeuristicLoader.class, "heuristic",
+                                       config);
+    }
+
+    /**
+     * Find a line-selection heuristic, using a plug-in from a class
+     * loader, matching the supplied configuration.
+     *
+     * @param config a string identifying the plug-in and specifying its
+     * configuration
+     *
+     * @return the instance supplied by the first matching loader
+     *
+     * @throws UnknownPluginException if the configuration string
+     * matches no known plug-in
+     *
+     * @throws PluginConfigurationException if the configuration string
+     * was recognized, but is invalid
+     *
+     * @throws PluginException if some other exception occurred
+     *
+     * @param classLoader the class loader used to find line-selection
+     * heuristics
+     *
+     * @see LineHeuristicLoader The service type sought by this method
+     */
+    public static LineHeuristic findLineHeuristic(String config,
+                                                  ClassLoader classLoader)
+        throws PluginException {
+        return PluginLoader.findPlugin(LineHeuristicLoader.class, "heuristic",
+                                       config, classLoader);
+    }
+
     /**
      * Compute a line's priority to be solved. Larger values imply
      * higher priorities.

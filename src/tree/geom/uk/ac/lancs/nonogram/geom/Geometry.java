@@ -40,6 +40,8 @@ import java.util.Map;
 import java.util.function.Function;
 import uk.ac.lancs.nonogram.aspect.Clue;
 import uk.ac.lancs.nonogram.aspect.Hue;
+import uk.ac.lancs.nonogram.plugin.PluginException;
+import uk.ac.lancs.nonogram.plugin.PluginLoader;
 
 /**
  * Creates puzzle representations from a named type, with named banks of
@@ -48,6 +50,58 @@ import uk.ac.lancs.nonogram.aspect.Hue;
  * @author simpsons
  */
 public interface Geometry {
+    /**
+     * Find a puzzle geometry, using a plug-in matching the supplied
+     * configuration.
+     *
+     * @param config a string identifying the plug-in and specifying its
+     * configuration
+     *
+     * @return the instance supplied by the first matching loader
+     *
+     * @throws UnknownPluginException if the configuration string
+     * matches no known plug-in
+     *
+     * @throws PluginConfigurationException if the configuration string
+     * was recognized, but is invalid
+     *
+     * @throws PluginException if some other exception occurred
+     *
+     * @see GeometryLoader The service type sought by this method
+     */
+    public static Geometry findGeometry(String config) throws PluginException {
+        return PluginLoader.findPlugin(GeometryLoader.class, "geometry",
+                                       config);
+    }
+
+    /**
+     * Find a puzzle geometry, using a plug-in from a class loader,
+     * matching the supplied configuration.
+     *
+     * @param config a string identifying the plug-in and specifying its
+     * configuration
+     *
+     * @return the instance supplied by the first matching loader
+     *
+     * @throws UnknownPluginException if the configuration string
+     * matches no known plug-in
+     *
+     * @throws PluginConfigurationException if the configuration string
+     * was recognized, but is invalid
+     *
+     * @throws PluginException if some other exception occurred
+     *
+     * @param classLoader the class loader used to find puzzle-geometry
+     * plug-ins
+     *
+     * @see GeometryLoader The service type sought by this method
+     */
+    public static Geometry findGeometry(String config, ClassLoader classLoader)
+        throws PluginException {
+        return PluginLoader.findPlugin(GeometryLoader.class, "geometry", config,
+                                       classLoader);
+    }
+
     /**
      * Create a puzzle geometry from puzzle data. A particular geometry
      * will require several named banks of data. For example, a

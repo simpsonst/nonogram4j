@@ -35,12 +35,71 @@
 
 package uk.ac.lancs.nonogram.line;
 
+import uk.ac.lancs.nonogram.plugin.PluginConfigurationException;
+import uk.ac.lancs.nonogram.plugin.PluginException;
+import uk.ac.lancs.nonogram.plugin.PluginLoader;
+import uk.ac.lancs.nonogram.plugin.UnknownPluginException;
+
 /**
  * Creates line solvers for specific lines.
  * 
  * @author simpsons
  */
 public interface LineAlgorithm {
+    /**
+     * Find a line-solving algorithm, using a plug-in matching the
+     * supplied configuration.
+     *
+     * @param config a string identifying the plug-in and specifying its
+     * configuration
+     *
+     * @return the instance supplied by the first matching loader
+     *
+     * @throws UnknownPluginException if the configuration string
+     * matches no known plug-in
+     *
+     * @throws PluginConfigurationException if the configuration string
+     * was recognized, but is invalid
+     *
+     * @throws PluginException if some other exception occurred
+     *
+     * @see LineAlgorithmLoader The service type sought by this method
+     */
+    public static LineAlgorithm findLineAlgorithm(String config)
+        throws PluginException {
+        return PluginLoader.findPlugin(LineAlgorithmLoader.class, "algo",
+                                       config);
+    }
+
+    /**
+     * Find a line-solving algorithm, using a plug-in from a class
+     * loader, matching the supplied configuration.
+     *
+     * @param config a string identifying the plug-in and specifying its
+     * configuration
+     *
+     * @return the instance supplied by the first matching loader
+     *
+     * @throws UnknownPluginException if the configuration string
+     * matches no known plug-in
+     *
+     * @throws PluginConfigurationException if the configuration string
+     * was recognized, but is invalid
+     *
+     * @throws PluginException if some other exception occurred
+     *
+     * @param classLoader the class loader used to find line-solving
+     * algorithm loaders
+     *
+     * @see LineAlgorithmLoader The service type sought by this method
+     */
+    public static LineAlgorithm findLineAlgorithm(String config,
+                                                  ClassLoader classLoader)
+        throws PluginException {
+        return PluginLoader.findPlugin(LineAlgorithmLoader.class, "algo",
+                                       config, classLoader);
+    }
+
     /**
      * Prepare to work on a given line of cells.
      * 

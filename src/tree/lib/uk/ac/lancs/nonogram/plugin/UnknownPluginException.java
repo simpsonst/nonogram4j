@@ -1,8 +1,6 @@
 // -*- c-basic-offset: 4; indent-tabs-mode: nil -*-
 
-package uk.ac.lancs.nonogram.solver;
-
-import uk.ac.lancs.nonogram.plugin.PluginException;
+package uk.ac.lancs.nonogram.plugin;
 
 /**
  * No matching plug-in could be found.
