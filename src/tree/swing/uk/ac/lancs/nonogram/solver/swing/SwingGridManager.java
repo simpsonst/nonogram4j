@@ -43,7 +43,7 @@ import java.util.Map;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
-import uk.ac.lancs.nonogram.geom.Display;
+import uk.ac.lancs.nonogram.display.Display;
 import uk.ac.lancs.nonogram.geom.DisplayType;
 import uk.ac.lancs.nonogram.geom.Displayable;
 import uk.ac.lancs.nonogram.geom.WidgetDisplay;

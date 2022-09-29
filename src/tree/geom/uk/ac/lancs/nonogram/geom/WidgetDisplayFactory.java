@@ -35,6 +35,8 @@
 
 package uk.ac.lancs.nonogram.geom;
 
+import uk.ac.lancs.nonogram.display.DisplayFactory;
+
 /**
  * @resume A display factory that includes a display-specific widget
  * 

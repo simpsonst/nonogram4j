@@ -35,6 +35,7 @@
 
 package uk.ac.lancs.nonogram.geom;
 
+import uk.ac.lancs.nonogram.display.Display;
 import uk.ac.lancs.nonogram.aspect.Palette;
 
 /**

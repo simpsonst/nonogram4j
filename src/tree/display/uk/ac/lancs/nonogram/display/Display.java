@@ -33,7 +33,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package uk.ac.lancs.nonogram.geom;
+package uk.ac.lancs.nonogram.display;
 
 /**
  * @resume A visual display of a solver's grid state

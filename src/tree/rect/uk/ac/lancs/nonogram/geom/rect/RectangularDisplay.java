@@ -45,7 +45,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import uk.ac.lancs.nonogram.aspect.Palette;
 import uk.ac.lancs.nonogram.aspect.Tile;
-import uk.ac.lancs.nonogram.geom.Display;
+import uk.ac.lancs.nonogram.display.Display;
 import uk.ac.lancs.nonogram.geom.WidgetDisplay;
 
 /**

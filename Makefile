@@ -70,12 +70,18 @@ trees_nonogram4j_aspect += aspect
 SELECTED_JARS += nonogram4j_solver
 trees_nonogram4j_solver += solver
 
+SELECTED_JARS += nonogram4j_display
+trees_nonogram4j_display += display
+
 
 test_suite += uk.ac.lancs.nonogram.TestUtils
 test_suite += uk.ac.lancs.nonogram.line.fast.TestLine
 
+roots_display=$(found_display)
+
 roots_swing=$(found_swing)
 deps_swing += geom
+deps_swing += display
 deps_swing += solver
 
 roots_clue=$(found_clue)
@@ -111,6 +117,7 @@ roots_geom=$(found_geom)
 deps_geom += layout
 deps_geom += lib
 deps_geom += aspect
+deps_geom += display
 
 roots_heuristic=$(found_heuristic)
 deps_heuristic += clue
@@ -122,6 +129,7 @@ deps_rect += layout
 deps_rect += lib
 deps_rect += aspect
 deps_rect += geom
+deps_rect += display
 
 roots_solver=$(found_solver)
 deps_solver += clue
@@ -130,7 +138,8 @@ deps_solver += lib
 deps_solver += aspect
 deps_solver += line
 deps_solver += heuristic
-deps_solver += geom
+#deps_solver += geom
+deps_solver += display
 
 roots_tests=$(found_tests)
 deps_tests += lib

@@ -35,7 +35,7 @@
 
 package uk.ac.lancs.nonogram.solver;
 
-import uk.ac.lancs.nonogram.geom.Display;
+import uk.ac.lancs.nonogram.display.Display;
 
 /**
  * Creates displays for given objects.
