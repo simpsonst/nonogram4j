@@ -38,6 +38,7 @@ package uk.ac.lancs.nonogram.aspect;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
+import uk.ac.lancs.nonogram.Cell;
 
 /**
  * Represents the selection of colours and forms used to display a
@@ -130,7 +131,7 @@ public final class Palette {
      * <var>n</var> is the number of colours
      */
     public BitSet createWorkingState() {
-        return Cells.newCell(colors());
+        return Cell.newCell(colors());
     }
 
     /**

@@ -46,13 +46,12 @@ import java.util.WeakHashMap;
 import uk.ac.lancs.nonogram.Cell;
 import uk.ac.lancs.nonogram.Layout;
 import uk.ac.lancs.nonogram.Line;
-import uk.ac.lancs.nonogram.aspect.Cells;
 import uk.ac.lancs.nonogram.geom.Display;
 import uk.ac.lancs.nonogram.geom.DisplayFactory;
 import uk.ac.lancs.nonogram.line.Cache;
+import uk.ac.lancs.nonogram.line.LineChallenge;
 import uk.ac.lancs.nonogram.line.LineSolver;
 import uk.ac.lancs.nonogram.line.LineSolver.Result;
-import uk.ac.lancs.nonogram.line.LineChallenge;
 import uk.ac.lancs.nonogram.line.heuristic.LineHeuristic;
 
 /**
@@ -207,7 +206,7 @@ public final class Grid {
          * update the display, as 'unknown' is the default state. */
         cells = new BitSet[cellCount];
         for (int i = 0; i < cells.length; i++)
-            cells[i] = Cells.newCell(colors);
+            cells[i] = Cell.newCell(colors);
 
         /* Set weights and algorithm levels. Update the display to show
          * the levels. */
@@ -272,7 +271,7 @@ public final class Grid {
         try (Display.Transaction xact = display.open()) {
             this.cells = new BitSet[source.cells.length];
             for (int i = 0; i < cells.length; i++) {
-                cells[i] = Cells.copy(source.cells[i]);
+                cells[i] = Cell.copy(source.cells[i]);
                 if (cells[i].cardinality() == 1)
                     xact.setCell(i, cells[i].nextSetBit(0));
             }
@@ -523,7 +522,7 @@ public final class Grid {
         }
         final LineChallenge line =
             new LineChallenge(colors, lineGeom.clue(), workingState,
-                             caches[lineNumber]);
+                              caches[lineNumber]);
 
         lineActivity.set(lineNumber);
         try (Display.Transaction xact = display.open()) {

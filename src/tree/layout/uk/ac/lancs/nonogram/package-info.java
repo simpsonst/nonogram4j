@@ -40,5 +40,13 @@
  * Describes puzzles in a form independent from presentation.
  * {@link uk.ac.lancs.nonogram.Layout} is the primary class, defining
  * how cells and lines are related.
+ * 
+ * <p>
+ * During solving, cells have a <dfn>working state</dfn> representing
+ * the set of colours that have not yet been eliminated. A cell state is
+ * represented by a {@link java.util.BitSet}, with bit 0 set if colour 1
+ * has not yet been eliminated, bit 1 if colour 2, and so on.
+ * {@link Cell} includes static methods for manipulating such states.
  */
 package uk.ac.lancs.nonogram;
+
