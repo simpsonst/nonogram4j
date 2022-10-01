@@ -40,8 +40,10 @@ import java.util.Map;
 import java.util.function.Function;
 import uk.ac.lancs.nonogram.aspect.Clue;
 import uk.ac.lancs.nonogram.aspect.Hue;
+import uk.ac.lancs.nonogram.plugin.PluginConfigurationException;
 import uk.ac.lancs.nonogram.plugin.PluginException;
 import uk.ac.lancs.nonogram.plugin.PluginLoader;
+import uk.ac.lancs.nonogram.plugin.UnknownPluginException;
 
 /**
  * Creates puzzle representations from a named type, with named banks of

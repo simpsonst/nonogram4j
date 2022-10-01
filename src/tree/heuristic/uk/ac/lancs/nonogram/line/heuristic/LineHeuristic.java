@@ -37,8 +37,10 @@ package uk.ac.lancs.nonogram.line.heuristic;
 
 import java.util.List;
 import uk.ac.lancs.nonogram.clue.Block;
+import uk.ac.lancs.nonogram.plugin.PluginConfigurationException;
 import uk.ac.lancs.nonogram.plugin.PluginException;
 import uk.ac.lancs.nonogram.plugin.PluginLoader;
+import uk.ac.lancs.nonogram.plugin.UnknownPluginException;
 
 /**
  * Computes a heuristic priority for solving a line.
