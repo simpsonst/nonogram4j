@@ -38,6 +38,8 @@
 
 package uk.ac.lancs.nonogram.clue;
 
+import uk.ac.lancs.nonogram.clue.ReverseCellSequence;
+import uk.ac.lancs.nonogram.clue.CellSequence;
 import java.util.Objects;
 
 /**

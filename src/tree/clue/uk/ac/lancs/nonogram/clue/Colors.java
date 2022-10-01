@@ -107,10 +107,34 @@ public final class Colors {
         return 64 - Long.numberOfLeadingZeros(colorSet);
     }
 
+    /**
+     * Test whether a colour set includes a specific colour.
+     * 
+     * @param colorSet the test to be tested
+     * 
+     * @param color the sought colour
+     * 
+     * @return {@code true} if the sought colour is in the set;
+     * {@code false} otherwise
+     * 
+     * @see #lacks(long, int) for the opposite sense
+     */
     public static boolean has(long colorSet, int color) {
         return (colorSet & (1 << color)) != 0;
     }
 
+    /**
+     * Test whether a colour set excludes a specific colour.
+     * 
+     * @param colorSet the test to be tested
+     * 
+     * @param color the sought colour
+     * 
+     * @return {@code false} if the sought colour is in the set;
+     * {@code true} otherwise
+     * 
+     * @see #has(long, int) for the opposite sense
+     */
     public static boolean lacks(long colorSet, int color) {
         return (colorSet & (1 << color)) == 0;
     }

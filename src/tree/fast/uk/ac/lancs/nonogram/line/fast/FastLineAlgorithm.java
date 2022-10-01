@@ -46,10 +46,10 @@ import uk.ac.lancs.nonogram.line.LineSolver;
 
 /**
  * Implements the ‘fast’ line-solving algorithm. This uses the method
- * {@link #push(int[], List, List)} to find one set of extreme positions
- * of all blocks, then it applies it again to a reversed view of the
- * line. By looking for overlaps implied by these two extremes, a large
- * proportion of the cells can be determined very quickly.
+ * {@link #push(int[], CellSequence, List)} to find one set of extreme
+ * positions of all blocks, then it applies it again to a reversed view
+ * of the line. By looking for overlaps implied by these two extremes, a
+ * large proportion of the cells can be determined very quickly.
  * 
  * @author simpsons
  */

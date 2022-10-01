@@ -28,7 +28,9 @@ LineHeuristic lineHeuristic = Plugins.findLineHeuristic("fast");
 </pre>
 
   <p>
-    Next, the solver should create a {@link uk.ac.lancs.nonogram.Puzzle} in which to load the XML representation of the puzzle:
+    Next, the solver should create a
+    {@link uk.ac.lancs.nonogram.aspect.Puzzle}
+    in which to load the XML representation of the puzzle:
   </p>
 
   <pre>
@@ -38,8 +40,12 @@ Puzzle data = XMLFormat.INSTANCE.read(input, locale);
 </pre>
 
   <p>
-    Then it should use {@link uk.ac.lancs.nonogram.solver.Plugins#findGeometry(java.lang.String)} to load geometry compatible with the puzzle.
-    On that, it should invoke {@link uk.ac.lancs.nonogram.geom.Geometry#createLayout(java.lang.String, java.util.function.Function, java.util.Map)} to get a geometry-independent representation of the puzzle in terms of lines and cells:
+    Then it should use
+    {@link uk.ac.lancs.nonogram.geom.Geometry#findGeometry(String)}
+    to load geometry compatible with the puzzle.
+    On that, it should invoke
+    {@link uk.ac.lancs.nonogram.geom.Geometry#createLayout(java.lang.String, java.util.function.Function, java.util.Map)}
+    to get a geometry-independent representation of the puzzle in terms of lines and cells:
   </p>
 
   <pre>
@@ -49,7 +55,11 @@ DisplayableLayout layout =
 </pre>
 
   <p>
-    At some point, a {@link uk.ac.lancs.nonogram.solver.GridSource}, a {@link uk.ac.lancs.nonogram.solver.GridSink}, and a {@link uk.ac.lancs.nonogram.geom.DisplayFactory} should be set up, usually provided by a single object:
+    At some point, a
+    {@link uk.ac.lancs.nonogram.solver.GridSource}, a
+    {@link uk.ac.lancs.nonogram.solver.GridSink}, and a
+    {@link uk.ac.lancs.nonogram.display.DisplayFactory}
+    should be set up, usually provided by a single object:
   </p>
 
   <pre>

@@ -37,9 +37,8 @@
  */
 
 /**
- * Describes puzzles in a form independent from presentation.
- * {@link uk.ac.lancs.nonogram.layout.Layout} is the primary class,
- * defining how cells and lines are related.
+ * Provides an abstraction for changeable views of a working grid.
+ * 
+ * @author simpsons
  */
-package uk.ac.lancs.nonogram.layout;
-
+package uk.ac.lancs.nonogram.display;

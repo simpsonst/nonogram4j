@@ -39,11 +39,24 @@
 /**
  * Defines classes for internal representation of clues.
  * 
+ * <p>
  * A clue is a sequence of blocks, where each block has a positive
  * length and a positive (non-background) colour number.
  * {@link uk.ac.lancs.nonogram.clue.Block} expresses such a block, and a
  * <code>{@linkplain java.util.List}&lt;Block&gt;</code> therefore
  * expresses a clue. A clue may be empty.
+ * 
+ * <p>
+ * Colour numbers are non-negative integers up to a maximum. Zero is
+ * reserved as the background colour, so no block has this colour
+ * number.
+ * 
+ * <p>
+ * During solving, cells have a <dfn>working state</dfn> representing
+ * the set of colours that have not yet been eliminated. A cell state is
+ * represented by a {@code long}, with bit 0 set if colour 0 has not yet
+ * been eliminated, bit 1 if colour 1, and so on. {@link Colors}
+ * includes static methods for manipulating such states.
  * 
  * @author simpsons
  */

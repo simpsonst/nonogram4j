@@ -51,7 +51,7 @@ public interface Cell {
      * clue Create a map out of a collection of cell descriptions.
      *
      * @param cells the cell descriptions, such as returned by
-     * {@link Layout#getCells()}
+     * {@link Layout#cells()}
      *
      * @return a map of the cells indexed by each cell's
      * {@link Cell#index() index}

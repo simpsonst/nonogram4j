@@ -43,6 +43,7 @@ import uk.ac.lancs.nonogram.display.Display;
  * @author simpsons
  *
  * @param <K> the type of objects used to index returned displays
+ * 
  */
 public interface KeyedDisplayFactory<K> {
     /**

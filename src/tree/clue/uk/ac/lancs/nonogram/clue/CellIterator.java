@@ -39,15 +39,45 @@
 package uk.ac.lancs.nonogram.clue;
 
 /**
- * Iterates over a cell sequence.
+ * Iterates over a cell sequence. The idiom is:
+ * 
+ * <pre>
+ * CellSequence seq = <var>...</var>;
+ * for (CellIterator iter = seq.iterator(); iter.more(); iter.next()) {
+ *   <var>...</var>
+ * }
+ * </pre>
+ * 
+ * @see CellSequence
+ * 
+ * @see Colors
  * 
  * @author simpsons
  */
 public interface CellIterator {
+    /**
+     * Move to the next position in the cell sequence.
+     */
     void next();
 
+    /**
+     * Get the colour set of the current cell.
+     * 
+     * @return the colour set
+     * 
+     * @see CellSequence#get(int)
+     */
     long get();
 
+    /**
+     * Replace the colour set of the current cell.
+     * 
+     * @param colorSet the new colour set
+     * 
+     * @return the old colour set
+     * 
+     * @see CellSequence#put(int, long)
+     */
     long put(long colorSet);
 
     /**
@@ -57,23 +87,113 @@ public interface CellIterator {
      */
     int at();
 
+    /**
+     * Add colours of another set to the current cell's set.
+     * 
+     * @param colorSet the colours to add
+     * 
+     * @return the old colour set
+     * 
+     * @see CellSequence#addAll(int, long)
+     */
     long addAll(long colorSet);
 
+    /**
+     * Remove colours of another set from the current cell's set.
+     * 
+     * @param colorSet the colours to remove
+     * 
+     * @return the old colour set
+     * 
+     * @see CellSequence#removeAll(int, long)
+     */
     long removeAll(long colorSet);
 
+    /**
+     * Invert the presence of colours of another set in the current
+     * cell's set.
+     * 
+     * @param colorSet the colours to invert
+     * 
+     * @return the old colour set
+     * 
+     * @see CellSequence#toggleAll(int, long)
+     */
     long toggleAll(long colorSet);
 
+    /**
+     * Retain colours of another set in the current cell's set.
+     * 
+     * @param colorSet the colours to retain
+     * 
+     * @return the old colour set
+     * 
+     * @see CellSequence#retainAll(int, long)
+     */
     long retainAll(long colorSet);
 
+    /**
+     * Get the width of the current cell's set.
+     * 
+     * @return the width of the set
+     * 
+     * @see Colors#width(long)
+     * 
+     * @see CellSequence#width(int)
+     */
     int width();
 
+    /**
+     * Test whether the current cell's set includes a colour.
+     * 
+     * @param color the sought colour
+     * 
+     * @return {@code true} if the cell's set includes the colour;
+     * {@code false} otherwise
+     * 
+     * @see Colors#has(long, int)
+     * 
+     * @see CellSequence#has(int, int)
+     */
     boolean has(int color);
 
+    /**
+     * Test whether the current cell's set excludes a colour.
+     * 
+     * @param color the sought colour
+     * 
+     * @return {@code true} if the cell's set excludes the colour;
+     * {@code false} otherwise
+     * 
+     * @default By default, {@link #has(int)} is invoked, and the result
+     * inverted.
+     * 
+     * @see Colors#lacks(long, int)
+     * 
+     * @see CellSequence#lacks(int, int)
+     */
     default boolean lacks(int color) {
         return !has(color);
     }
 
+    /**
+     * Test whether there are more elements in the iteration.
+     * 
+     * @return {@code true} if there are more elements; {@code false}
+     * otherwise
+     */
     boolean more();
 
+    /**
+     * Get the colour number of the current cell's colour set.
+     * 
+     * @return the colour if the set only contains that colour;
+     * {@link Colors#INCONSISTENT_COLOR} if the set is empty; or
+     * {@link Colors#INDETERMINATE_COLOR} otherwise
+     * 
+     * @see Colors#color(long)
+     * 
+     * @see CellSequence#color(int)
+     */
     int color();
 }

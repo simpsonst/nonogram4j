@@ -110,6 +110,7 @@ deps_fast += heuristic
 roots_fcomp=$(found_fcomp)
 deps_fcomp += line
 deps_fcomp += util
+deps_fcomp += clue
 deps_fcomp += lib
 deps_fcomp += heuristic
 
@@ -172,11 +173,14 @@ DOC_PKGS += uk.ac.lancs.nonogram.solver.swing
 DOC_PKGS += uk.ac.lancs.nonogram.line
 DOC_PKGS += uk.ac.lancs.nonogram.util
 DOC_PKGS += uk.ac.lancs.nonogram.plugin
-DOC_PKGS += uk.ac.lancs.nonogram
+DOC_PKGS += uk.ac.lancs.nonogram.layout
+DOC_PKGS += uk.ac.lancs.nonogram.display
+DOC_PKGS += uk.ac.lancs.nonogram.clue
+#DOC_PKGS += uk.ac.lancs.nonogram
 DOC_PKGS += uk.ac.lancs.nonogram.aspect
 DOC_PKGS += uk.ac.lancs.nonogram.line.heuristic
 DOC_PKGS += uk.ac.lancs.nonogram.line.fast
-DOC_PKGS += uk.ac.lancs.nonogram.line.comprehensive
+#DOC_PKGS += uk.ac.lancs.nonogram.line.comprehensive
 DOC_PKGS += uk.ac.lancs.nonogram.geom
 DOC_PKGS += uk.ac.lancs.nonogram.geom.rect
 

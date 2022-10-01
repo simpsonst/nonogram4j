@@ -42,8 +42,8 @@
  * 
  * <p>
  * Creating a new line-solving algorithm first involves writing an
- * implementation of {@link uk.ac.lancs.nonogram.line.LineSolver}
- * that takes a {@link uk.ac.lancs.nonogram.line.LineWorkUnit} as
+ * implementation of {@link uk.ac.lancs.nonogram.line.LineSolver} that
+ * takes a {@link uk.ac.lancs.nonogram.line.LineChallenge} as
  * configuration, which provides it with details of a line to be solved.
  * The algorithm itself should be inside the
  * 
@@ -54,8 +54,8 @@
  * 
  * <p>
  * The {@code LineWorkUnit} is passed to a new {@code LineSolver} by
- * implementing {@link uk.ac.lancs.nonogram.line.LineAlgorithm},
- * which abstracts the construction of the {@code LineSolver}.
+ * implementing {@link uk.ac.lancs.nonogram.line.LineAlgorithm}, which
+ * abstracts the construction of the {@code LineSolver}.
  * 
  * <p>
  * To make the algorithm available to a solver, a

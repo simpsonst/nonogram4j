@@ -39,13 +39,13 @@
  * intersecting lines (each with a unique index). Such a puzzle is
  * represented by a
  *
- * {@link uk.ac.lancs.nonogram.geom.Layout} object.
+ * {@link uk.ac.lancs.nonogram.layout.Layout} object.
  * 
  * <p>
  * A line is described as a sequence of cell indices, with an associated
  * clue, as represented by
  * 
- * {@link uk.ac.lancs.nonogram.geom.Line}.
+ * {@link uk.ac.lancs.nonogram.layout.Line}.
  * 
  * A line description must also express the indices of intersecting
  * lines at each of its cells.
@@ -54,11 +54,10 @@
  * Clues are obtained from named banks, whose sizes imply the dimensions
  * of the puzzle. The number of colours in the puzzle is also implied by
  * the colours of the blocks in the clues. It is the job of a
- * {@link uk.ac.lancs.nonogram.geom.Geometry} to accept such named
- * banks (from a textual description of a puzzle, for example) to
- * produce a
+ * {@link uk.ac.lancs.nonogram.geom.Geometry} to accept such named banks
+ * (from a textual description of a puzzle, for example) to produce a
  *
- * {@link uk.ac.lancs.nonogram.geom.Layout}.
+ * {@link uk.ac.lancs.nonogram.layout.Layout}.
  * 
  * <p>
  * For example, a rectangular puzzle could be expressed as two banks of
@@ -88,11 +87,11 @@
  * 
  * <ul>
  * 
- * <li>2<var>b</var> = <var>A</var> + <var>D</var> - <var>H</var>
+ * <li>2<var>b</var> = <var>A</var> + <var>D</var> &minus; <var>H</var>
  * 
- * <li>2<var>d</var> = <var>D</var> + <var>H</var> - <var>A</var>
+ * <li>2<var>d</var> = <var>D</var> + <var>H</var> &minus; <var>A</var>
  * 
- * <li>2<var>l</var> = <var>A</var> + <var>H</var> - <var>D</var>
+ * <li>2<var>l</var> = <var>A</var> + <var>H</var> &minus; <var>D</var>
  * 
  * </ul>
  * 
@@ -101,25 +100,25 @@
  * missing, so the size of that bank will have to be given explicitly.
  * 
  * <p>
- * A {@link uk.ac.lancs.nonogram.geom.Display} provides an interface
+ * A {@link uk.ac.lancs.nonogram.display.Display} provides an interface
  * through which a solver could render its current progress to the user.
  * It provides methods to record a change in a cell's colour, a line's
  * activity, and a line's algorithm level. Multiple displays can be
  * obtained from a single
  * 
- * {@link uk.ac.lancs.nonogram.geom.DisplayFactory},
+ * {@link uk.ac.lancs.nonogram.display.DisplayFactory},
  * 
  * and multiple factories can be created from a geometry. In fact, a
  * geometry creates a
- * {@link uk.ac.lancs.nonogram.geom.WidgetDisplayFactory} (which is
- * an extension of
+ * {@link uk.ac.lancs.nonogram.geom.WidgetDisplayFactory} (which is an
+ * extension of
  * 
- * {@link uk.ac.lancs.nonogram.geom.DisplayFactory}),
+ * {@link uk.ac.lancs.nonogram.display.DisplayFactory}),
  * 
  * and generates {@link uk.ac.lancs.nonogram.geom.WidgetDisplay} (an
  * extension of
  * 
- * {@link uk.ac.lancs.nonogram.geom.Display}),
+ * {@link uk.ac.lancs.nonogram.display.Display}),
  * 
  * and provides an extra component which can be added to a GUI (e.g.,
  * Swing or AWT) to actually display the changes. The component type is
@@ -129,8 +128,8 @@
  * 
  * which is passed to the
  * {@link uk.ac.lancs.nonogram.geom.DisplayableLayout} to obtain a
- * {@link uk.ac.lancs.nonogram.geom.WidgetDisplayFactory} of the
- * correct GUI-component type.
+ * {@link uk.ac.lancs.nonogram.geom.WidgetDisplayFactory} of the correct
+ * GUI-component type.
  * 
  * <p>
  * This level abstraction complexity allows decoupling between the

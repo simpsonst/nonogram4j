@@ -75,19 +75,82 @@ public interface CellSequence {
         return Colors.width(get(index));
     }
 
+    /**
+     * Test whether the set at a given index includes a colour.
+     * 
+     * @param index the index
+     * 
+     * @param color the sought colour
+     * 
+     * @return {@code true} if the cell's set includes the colour;
+     * {@code false} otherwise
+     * 
+     * @throws IndexOutOfBoundsException if the index is negative or not
+     * less than the size
+     * 
+     * @default The default behaviour passes the result of
+     * {@link #get(int)} to {@link Colors#has(long, int)}.
+     */
     default boolean has(int index, int color) {
         return Colors.has(get(index), color);
     }
 
+    /**
+     * Test whether the set at a given index excludes a colour.
+     * 
+     * @param index the index
+     * 
+     * @param color the sought colour
+     * 
+     * @return {@code true} if the cell's set excludes the colour;
+     * {@code false} otherwise
+     * 
+     * @throws IndexOutOfBoundsException if the index is negative or not
+     * less than the size
+     * 
+     * @default The default behaviour passes the result of
+     * {@link #get(int)} to {@link Colors#lacks(long, int)}.
+     */
     default boolean lacks(int index, int color) {
         return Colors.lacks(get(index), color);
     }
 
+    /**
+     * Get an iterator over the entire sequence.
+     * 
+     * @return the requested iterator
+     * 
+     * @default By default,
+     * <code>{@linkplain #iterator(int, int) iterator}(0,
+     * {@linkplain #size() size}())</code> is called.
+     */
     default CellIterator iterator() {
         return iterator(0, size());
     }
 
-    default CellIterator iterator(int fromIndex, final int toIndex) {
+    /**
+     * Get an iterator over part of the sequence. Note that
+     * {@link CellIterator#at()} will return values in the specified
+     * range. In contrast, applying {@link #iterator()} to the result of
+     * {@link #subsequence(int, int)} will yield positions starting from
+     * 0.
+     * 
+     * @param fromIndex the index of the first element to be accessed by
+     * the iterator
+     * 
+     * @param toIndex one plus the index of the last element to be
+     * accessed by the iterator
+     * 
+     * @return the requested iterator
+     * 
+     * @default By default, an object that maintains a position within
+     * the sequence is returned. Each of its calls is simply passed on
+     * to a call of the same name on {@code this} {@link CellSequence}
+     * with the same arguments preceded by the sequence position. For
+     * example, {@link CellIterator#width()} is implemented by calling
+     * {@link #width(int)}.
+     */
+    default CellIterator iterator(final int fromIndex, final int toIndex) {
         if (fromIndex < 0 || fromIndex > size())
             throw new IndexOutOfBoundsException(fromIndex);
         if (toIndex < 0 || toIndex > size())
@@ -239,7 +302,7 @@ public interface CellSequence {
     }
 
     /**
-     * Add colours from another set to that at a given index.
+     * Add colours of another set to that at a given index.
      * 
      * @param index the index
      * 
@@ -259,8 +322,8 @@ public interface CellSequence {
     }
 
     /**
-     * Invert the presence of colours from another set in that at a
-     * given index.
+     * Invert the presence of colours of another set in that at a given
+     * index.
      * 
      * @param index the index
      * 

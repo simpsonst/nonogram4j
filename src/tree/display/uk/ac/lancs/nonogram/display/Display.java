@@ -36,6 +36,9 @@
 package uk.ac.lancs.nonogram.display;
 
 /**
+ * A display can provide a transaction, on which modifications are made
+ * before closing. These are then applied as an atomic operation.
+ * 
  * @resume A visual display of a solver's grid state
  * 
  * @author simpsons
@@ -63,7 +66,7 @@ public interface Display {
          * Set a cell to a given colour.
          * 
          * @param index the cell index, as defined by an associated
-         * {@link Layout}
+         * {@link uk.ac.lancs.nonogram.layout.Layout}
          * 
          * @param color the new cell colour, or -1 for unknown
          */
@@ -73,7 +76,7 @@ public interface Display {
          * Set the line-activity indicator.
          * 
          * @param index the line index, as defined by an associated
-         * {@link Layout}
+         * {@link uk.ac.lancs.nonogram.layout.Layout}
          * 
          * @param active the new indicator state
          */
@@ -87,7 +90,7 @@ public interface Display {
          * not attempted the line since they were last applied to it.
          * 
          * @param index the line index, as defined by an associated
-         * {@link Layout}
+         * {@link uk.ac.lancs.nonogram.layout.Layout}
          * 
          * @param state the new indicator state
          */
