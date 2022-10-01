@@ -108,7 +108,7 @@ public final class NullWidgetDisplayFactory
         }
 
         @Override
-        public void setCell(int index, int colour) {
+        public void setCell(int index, int color) {
             /* Ignored. */
         }
 

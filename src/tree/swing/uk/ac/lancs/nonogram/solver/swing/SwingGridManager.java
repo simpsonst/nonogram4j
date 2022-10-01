@@ -133,8 +133,8 @@ public class SwingGridManager<K>
                 }
 
                 @Override
-                public void setCell(int index, int colour) {
-                    xact.setCell(index, colour);
+                public void setCell(int index, int color) {
+                    xact.setCell(index, color);
                 }
 
                 @Override

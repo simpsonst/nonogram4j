@@ -99,8 +99,8 @@ final class RectangularDisplay<C> implements WidgetDisplay<C> {
             }
 
             @Override
-            public void setCell(int index, int colour) {
-                newCellStates.put(index, colour);
+            public void setCell(int index, int color) {
+                newCellStates.put(index, color);
             }
 
             @Override
@@ -166,9 +166,9 @@ final class RectangularDisplay<C> implements WidgetDisplay<C> {
          * yet. */
         for (Map.Entry<Integer, Integer> entry : newCellStates.entrySet()) {
             int index = entry.getKey();
-            int colour = entry.getValue();
+            int color = entry.getValue();
             if (index >= 0 && index < state.cellColours.length)
-                state.cellColours[index] = colour;
+                state.cellColours[index] = color;
         }
 
         /* Update the palette if changed, and then mark for update cells

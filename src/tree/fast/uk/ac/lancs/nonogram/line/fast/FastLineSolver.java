@@ -107,14 +107,14 @@ final class FastLineSolver implements LineSolver {
          * the cells must be of the block's color. */
         for (int block = 0; block < clueLength; block++) {
             if (minEnd[block] <= maxStart[block]) continue;
-            final int colour = line.clue.get(block).color;
-            final long notMask = Colors.of(colour);
+            final int color = line.clue.get(block).color;
+            final long notMask = Colors.of(color);
             for (CellIterator iter =
                 line.cells.iterator(maxStart[block], minEnd[block]);
                  iter.more(); iter.next()) {
                 /* The block's color must still be possible here, or the
                  * algorithm is faulty. */
-                assert iter.has(colour);
+                assert iter.has(color);
 
                 /* Clear all bits except the block's color. */
                 iter.retainAll(notMask);
@@ -124,11 +124,11 @@ final class FastLineSolver implements LineSolver {
         /* Where the end of one block fails to overlap the start of the
          * next of the same color, the cells in-between must be free of
          * that color. */
-        for (int colour = 1; colour < line.colors; colour++) {
-            final long colorSet = Colors.of(colour);
+        for (int color = 1; color < line.colors; color++) {
+            final long colorSet = Colors.of(color);
             int prevEnd = 0;
             for (int block = 0; block < clueLength; block++) {
-                if (line.clue.get(block).color != colour) continue;
+                if (line.clue.get(block).color != color) continue;
                 final int nextStart = minStart[block];
                 if (prevEnd < nextStart) {
                     for (CellIterator iter =
