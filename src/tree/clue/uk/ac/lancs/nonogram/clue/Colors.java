@@ -38,10 +38,7 @@
 
 package uk.ac.lancs.nonogram.clue;
 
-import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * Provides utilities for manipulating sets of internal colour numbers.
@@ -62,7 +59,10 @@ public final class Colors {
      *
      * @throws IllegalArgumentException if the number of colours is too
      * low
+     * 
+     * @deprecated {@link BitSet}s will be dropped as cell state.
      */
+    @Deprecated
     public static BitSet newCell(int colors) {
         if (colors < 2)
             throw new IllegalArgumentException("Insufficient colours");
@@ -72,81 +72,109 @@ public final class Colors {
     }
 
     /**
-     * Create a list of a line's cells within an array. The arguments
-     * specify an array, a start position, and the steps required to
-     * identify all other positions in the line.
-     *
-     * @param data the base set of cell states
-     *
-     * @param start the index into the array of the first cell of the
-     * line
-     *
-     * @param offsets pairs of integers giving the count and step of the
-     * next cells
-     *
-     * @return a list of cell states copied from the supplied data
-     *
-     * @throws IllegalArgumentException if an offset is non-positive; if
-     * the offset array has an odd number of elements
-     *
-     * @throws IndexOutOfBoundsException if the start position is not
-     * within the data array; if a computed offset is not within the
-     * data array
-     *
-     * @throws NullPointerException if either of the array arguments is
-     * {@code null}
+     * Create a colour set of only one colour.
+     * 
+     * @param color the colour to include
+     * 
+     * @return the set of the specified colour
      */
-    public static List<BitSet> listLine(BitSet[] data, int start,
-                                        int... offsets) {
-        Objects.requireNonNull(data, "data");
-        Objects.requireNonNull(offsets, "offsets");
-        if (offsets.length % 2 != 0)
-            throw new IllegalArgumentException("offsets not pair array; length "
-                + offsets.length);
-        int sum = 1;
-        for (int i = 0; i < offsets.length; i += 2) {
-            final int os = offsets[i + 1];
-            if (os < 1) throw new IllegalArgumentException("offset " + i
-                + " non-positive " + os);
-            sum += offsets[i];
-        }
-        List<BitSet> result = new ArrayList<>(sum);
-        result.add(copy(data[start]));
-        for (int i = 0; i < offsets.length; i += 2) {
-            int count = offsets[i];
-            int step = offsets[i + 1];
-            while (count-- > 0) {
-                start += step;
-                result.add(copy(data[start]));
-            }
-        }
-        return result;
+    public static long of(int color) {
+        return 1 << color;
     }
 
     /**
-     * Create a mutable copy of a line.
-     *
-     * @param in the source line
-     *
-     * @return a list of copies of the bit sets from the source line
+     * Create a range of colours.
+     * 
+     * @param color0 the lowest colour
+     * 
+     * @param color1 one plus the highest colour
+     * 
+     * @return the requested set
      */
-    public static List<BitSet> copyLine(List<? extends BitSet> in) {
-        List<BitSet> result = new ArrayList<>(in.size());
-        for (BitSet c : in)
-            result.add(copy(c));
-        return result;
+    public static long ofRange(int color0, int color1) {
+        return ~(~0l << (color1 - color0)) << color0;
     }
 
     /**
-     * Copy a cell's state. {@link BitSet#size()} is used to determine
-     * how much of the source state to copy, and
-     * {@link BitSet#get(int, int)} is used to perform the copy.
-     *
-     * @param from the cell's state
-     *
-     * @return the copy of the cell's state
+     * Get the minimum number of colours required to account for a
+     * colour set.
+     * 
+     * @param colorSet the set whose width is to be determined
+     * 
+     * @return the width of the set
      */
-    public static BitSet copy(BitSet from) {
-        return from.get(0, from.size());
+    public static int width(long colorSet) {
+        return 64 - Long.numberOfLeadingZeros(colorSet);
+    }
+
+    public static boolean has(long colorSet, int color) {
+        return (colorSet & (1 << color)) != 0;
+    }
+
+    public static boolean lacks(long colorSet, int color) {
+        return (colorSet & (1 << color)) == 0;
+    }
+
+    /**
+     * Create an initial working state for a cell in a puzzle with a
+     * given number of colours.
+     * 
+     * @param colors the number of colours in the puzzle
+     * 
+     * @return a long integer with bits 0 to <var>n</var>-1 set, where
+     * <var>n</var> is the number of colours
+     *
+     * @throws IllegalArgumentException if the number of colours is too
+     * low
+     */
+    public static long newCellLong(int colors) {
+        if (colors < 0)
+            throw new IllegalArgumentException("-ve colors: " + colors);
+        if (colors > 64)
+            throw new IllegalArgumentException("too many colors: " + colors);
+        return ~(~0 << colors);
+    }
+
+    /**
+     * Determine whether a colour set holds fewer than two member.
+     * 
+     * @param colorSet the set to be tested
+     * 
+     * @return {@code true} if the set has 0 or 1 members; {@code false}
+     * if it has 2 or more
+     */
+    public static boolean oneLeft(long colorSet) {
+        return (colorSet & (colorSet - 1)) == 0;
+    }
+
+    /**
+     * Indicates an impossible colour. This usually means that all
+     * possible colours for a cell have been eliminated, indicating that
+     * a puzzle has no solutions. The value is returned from
+     * {@link #color(long)} as an invalid (negative) colour number.
+     */
+    public static final int INCONSISTENT_COLOR = -1;
+
+    /**
+     * Indicates an unknown colour. This means that at least two colours
+     * have not been eliminated for a cell. The value is returned from
+     * {@link #color(long)} as an invalid (negative) colour number.
+     */
+    public static final int INDETERMINATE_COLOR = -2;
+
+    /**
+     * Determine whether a colour set is empty, or has more than one
+     * member, or which sole member it contains.
+     * 
+     * @param colorSet the set to be tested
+     * 
+     * @return {@link #INCONSISTENT_COLOR} if the set is empty;
+     * {@link #INDETERMINATE_COLOR} if the set has more than one member;
+     * or the sole member itself
+     */
+    public static int color(long colorSet) {
+        if (colorSet == 0) return INCONSISTENT_COLOR;
+        if (!oneLeft(colorSet)) return INDETERMINATE_COLOR;
+        return Long.numberOfTrailingZeros(colorSet);
     }
 }

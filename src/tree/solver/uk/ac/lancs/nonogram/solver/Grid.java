@@ -35,20 +35,18 @@
 
 package uk.ac.lancs.nonogram.solver;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 import java.util.WeakHashMap;
-import uk.ac.lancs.nonogram.layout.Cell;
-import uk.ac.lancs.nonogram.layout.Layout;
-import uk.ac.lancs.nonogram.layout.Line;
+import uk.ac.lancs.nonogram.clue.ArrayCellSequence;
 import uk.ac.lancs.nonogram.clue.Colors;
 import uk.ac.lancs.nonogram.display.Display;
 import uk.ac.lancs.nonogram.display.DisplayFactory;
+import uk.ac.lancs.nonogram.layout.Cell;
+import uk.ac.lancs.nonogram.layout.Layout;
+import uk.ac.lancs.nonogram.layout.Line;
 import uk.ac.lancs.nonogram.line.Cache;
 import uk.ac.lancs.nonogram.line.LineChallenge;
 import uk.ac.lancs.nonogram.line.LineSolver;
@@ -94,7 +92,7 @@ public final class Grid {
      * to give each cell an identity, and the layout only refers to
      * cells by such identities.
      */
-    private final BitSet[] cells;
+    private final long[] cells;
 
     /**
      * We keep a 1-dimensional array for line descriptions. Again, the
@@ -205,9 +203,9 @@ public final class Grid {
 
         /* Set all cells to 'completely unknown'. We don't need to
          * update the display, as 'unknown' is the default state. */
-        cells = new BitSet[cellCount];
+        cells = new long[cellCount];
         for (int i = 0; i < cells.length; i++)
-            cells[i] = Colors.newCell(colors);
+            cells[i] = Colors.newCellLong(colors);
 
         /* Set weights and algorithm levels. Update the display to show
          * the levels. */
@@ -268,22 +266,19 @@ public final class Grid {
          * independently of the source grid. */
         this.weights = Arrays.copyOf(source.weights, source.weights.length);
 
-        /* Cells must be copied, and the display updated. */
-        try (Display.Transaction xact = display.open()) {
-            this.cells = new BitSet[source.cells.length];
-            for (int i = 0; i < cells.length; i++) {
-                cells[i] = Colors.copy(source.cells[i]);
-                if (cells[i].cardinality() == 1)
-                    xact.setCell(i, cells[i].nextSetBit(0));
-            }
+        /* Cells must be copied, and colour eliminated from the best
+         * cell as the antithesis of the specified guess. */
+        this.cells = Arrays.copyOf(source.cells, source.cells.length);
+        cells[bestCell.index()] &= ~eliminatedColour;
+        deduced++;
+        guessed++;
+        assert nextLine == -1;
 
-            /* Now apply the antithesis of the specified guess. */
-            BitSet cellState = cells[bestCell.index()];
-            cellState.clear(eliminatedColour);
-            deduced++;
-            guessed++;
-            xact.setCell(bestCell.index(), eliminatedColour);
-            assert nextLine == -1;
+        /* Update the display and the intersecting lines. */
+        try (Display.Transaction xact = display.open()) {
+            for (int i = 0; i < cells.length; i++)
+                if (Colors.oneLeft(cells[i]))
+                    xact.setCell(i, Long.numberOfTrailingZeros(cells[i]));
 
             /* Affect all lines intersecting this cell. */
             nextLine = bestCell.intersects().stream().mapToObj(line -> {
@@ -398,7 +393,7 @@ public final class Grid {
         Cell bestCell = null;
         int bestScore = Integer.MIN_VALUE;
         for (Cell cell : layout.cells()) {
-            int options = cells[cell.index()].cardinality();
+            int options = Long.bitCount(cells[cell.index()]);
 
             /* We don't make guesses at cells which are known. */
             if (options == 1) continue;
@@ -420,9 +415,10 @@ public final class Grid {
 
         /* Pick any remaining colour at the best cell to be ourk
          * guess. */
-        BitSet cellState = cells[bestCell.index()];
-        final int remainingColours = cellState.cardinality();
-        final int selectedColour = cellState.nextSetBit(0);
+        final long cellState = cells[bestCell.index()];
+        final int remainingColours = Long.bitCount(cellState);
+        final int selectedColour = Long.numberOfTrailingZeros(cellState);
+        assert selectedColour < 64;
 
         {
             /* Clone this grid, telling it to make the opposite guess,
@@ -434,8 +430,7 @@ public final class Grid {
         /* Apply our own guess, updating the display, and selecting one
          * of the lines affected. */
         try (Display.Transaction xact = display.open()) {
-            cellState.clear();
-            cellState.set(selectedColour);
+            cells[bestCell.index()] = Colors.of(selectedColour);
             deduced += remainingColours - 1;
             guessed += remainingColours - 1;
             xact.setCell(bestCell.index(), selectedColour);
@@ -511,18 +506,32 @@ public final class Grid {
         final int lineNumber = nextLine;
         nextLine = -1;
 
+        final BitSet lockedLines = new BitSet();
         final int algo = levels[lineNumber] - 1;
         final Line lineGeom = lines[lineNumber];
-        final List<BitSet> workingState =
-            new ArrayList<>(lineGeom.cells().size());
+        final long[] workingState = new long[lineGeom.cells().size()];
+        int wsi = 0;
         for (Cell cell : lineGeom.cells()) {
-            BitSet state = cells[cell.index()];
-            if (state.cardinality() > 1) cell.intersects().stream()
-                .filter(i -> i != lineNumber).forEach(i -> locks[i]++);
-            workingState.add(state);
+            final long state = cells[cell.index()];
+            if ((state & (state - 1)) != 0) {
+                /* This cell is in an indeterminate state, i.e., it has
+                 * at least two colour possibilities. Identify as
+                 * lock-worthy lines that intersect this cell, apart
+                 * from the line we're working on. */
+                lockedLines.or(cell.intersects());
+            }
+            workingState[wsi++] = state;
         }
+        assert wsi == workingState.length;
+
+        /* Deselect the current line as lock-worthy, then lock the
+         * rest. */
+        lockedLines.clear(lineNumber);
+        lockedLines.stream().forEach(i -> locks[i]++);
+
         final LineChallenge line =
-            new LineChallenge(colors, lineGeom.clue(), workingState,
+            new LineChallenge(colors, lineGeom.clue(),
+                              new ArrayCellSequence(workingState),
                               caches[lineNumber]);
 
         lineActivity.set(lineNumber);
@@ -537,7 +546,7 @@ public final class Grid {
 
             @Override
             public void close() {
-                completeJob(lineNumber, result, workingState);
+                completeJob(lineNumber, result, workingState, lockedLines);
             }
 
             @Override
@@ -562,17 +571,14 @@ public final class Grid {
         };
     }
 
-    private synchronized void completeJob(final int lineNumber,
-                                          final LineSolver.Result result,
-                                          final List<BitSet> workingState) {
+    private synchronized void
+        completeJob(final int lineNumber, final LineSolver.Result result,
+                    final long[] workingState, final BitSet lockedLines) {
         final Line lineGeom = lines[lineNumber];
 
         /* Clear locks and records of activity. */
-        for (Cell cell : lineGeom.cells()) {
-            BitSet state = cells[cell.index()];
-            if (state.cardinality() > 1) cell.intersects().stream()
-                .filter(i -> i != lineNumber).forEach(i -> locks[i]--);
-        }
+        lockedLines.stream().forEach(i -> locks[i]--);
+
         try (Display.Transaction xact = display.open()) {
             lineActivity.clear(lineNumber);
             xact.setLineActivity(lineNumber, false);
@@ -592,33 +598,44 @@ public final class Grid {
 
             case EXHAUSTED:
                 /* Compare the current cell states with new ones. */
-                Iterator<BitSet> iter = workingState.iterator();
+                int wsi = 0;
                 for (Cell cell : lineGeom.cells()) {
-                    BitSet newState = iter.next();
-                    BitSet curState = cells[cell.index()];
+                    final int cwsi = wsi++;
                     for (int color = 0; color < colors; color++) {
                         /* Detect whether the colour has been
                          * eliminated. */
-                        if (newState.get(color)) {
-                            if (!curState.get(color)) {
-                                // TODO: Build an informative message.
+                        if (Colors.has(workingState[cwsi], color)) {
+                            if (Colors.lacks(cells[cell.index()], color)) {
+                                /* The line solver has added a colour
+                                 * that had already been eliminated.
+                                 * TODO: Build an informative
+                                 * message. */
                                 throw new IllegalStateException();
                             }
                             continue;
                         }
-                        if (!curState.get(color)) continue;
+                        if (Colors.lacks(cells[cell.index()], color)) {
+                            /* The colour has not been eliminated. */
+                            continue;
+                        }
 
                         /* We've detected the elimination of a colour.
                          * Record it as cleared. */
                         deduced++;
-                        curState.clear(color);
-                        if (curState.cardinality() == 0) {
-                            // TODO: Build an informative message.
+                        cells[cell.index()] &= Colors.of(color);
+                        if (cells[cell.index()] == 0) {
+                            /* All colours have been eliminated from
+                             * this cell. There can be no solution.
+                             * TODO: Build an informative message. */
                             throw new IllegalStateException();
                         }
-                        if (curState.cardinality() == 1) {
+
+                        if (Colors.oneLeft(cells[cell.index()])) {
+                            /* Indicate that a cell has been fully
+                             * determined. */
                             cellsRemaining--;
-                            xact.setCell(cell.index(), curState.nextSetBit(0));
+                            xact.setCell(cell.index(), Long
+                                .numberOfTrailingZeros(cells[cell.index()]));
                         }
 
                         /* Make this line less favourable for

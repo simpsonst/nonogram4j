@@ -35,11 +35,12 @@
 
 package uk.ac.lancs.nonogram.line.fast;
 
-import java.util.BitSet;
 import java.util.concurrent.atomic.AtomicReference;
+import uk.ac.lancs.nonogram.clue.CellIterator;
+import uk.ac.lancs.nonogram.clue.Colors;
 import uk.ac.lancs.nonogram.line.LineAlgorithm;
-import uk.ac.lancs.nonogram.line.LineSolver;
 import uk.ac.lancs.nonogram.line.LineChallenge;
+import uk.ac.lancs.nonogram.line.LineSolver;
 import uk.ac.lancs.nonogram.util.ReversedList;
 
 final class FastLineSolver implements LineSolver {
@@ -60,11 +61,7 @@ final class FastLineSolver implements LineSolver {
 
     private final AtomicReference<Thread> user = new AtomicReference<>();
 
-    private static final BitSet BACKGROUND = new BitSet();
-
-    static {
-        BACKGROUND.set(0);
-    }
+    private static final long BACKGROUND = 1;
 
     private Result innerProcess() {
         final int clueLength = line.clue.size();
@@ -72,9 +69,10 @@ final class FastLineSolver implements LineSolver {
 
         /* If there are no blocks, everything is background. */
         if (clueLength == 0) {
-            for (BitSet cell : line.cells) {
-                if (!cell.get(0)) return Result.INCONSISTENT;
-                cell.andNot(BACKGROUND);
+            for (CellIterator iter = line.cells.iterator(); iter.more();
+                 iter.next()) {
+                if (iter.lacks(0)) return Result.INCONSISTENT;
+                iter.put(BACKGROUND);
             }
             return Result.EXHAUSTED;
         }
@@ -88,8 +86,7 @@ final class FastLineSolver implements LineSolver {
         /* Push everything to the right. */
         final int[] revMinStart = new int[clueLength];
         final boolean rightState =
-            FastLineAlgorithm.push(revMinStart,
-                                   new ReversedList<>(line.cells),
+            FastLineAlgorithm.push(revMinStart, line.cells.reverse(),
                                    new ReversedList<>(line.clue));
         assert !rightState;
         if (aborted) return Result.ABORTED;
@@ -110,17 +107,17 @@ final class FastLineSolver implements LineSolver {
          * the cells must be of the block's color. */
         for (int block = 0; block < clueLength; block++) {
             if (minEnd[block] <= maxStart[block]) continue;
-            BitSet notMask = new BitSet();
             final int colour = line.clue.get(block).color;
-            notMask.set(colour);
-            for (BitSet cell : line.cells.subList(maxStart[block],
-                                                  minEnd[block])) {
+            final long notMask = Colors.of(colour);
+            for (CellIterator iter =
+                line.cells.iterator(maxStart[block], minEnd[block]);
+                 iter.more(); iter.next()) {
                 /* The block's color must still be possible here, or the
                  * algorithm is faulty. */
-                assert cell.get(colour);
+                assert iter.has(colour);
 
                 /* Clear all bits except the block's color. */
-                cell.andNot(notMask);
+                iter.retainAll(notMask);
             }
         }
 
@@ -128,18 +125,25 @@ final class FastLineSolver implements LineSolver {
          * next of the same color, the cells in-between must be free of
          * that color. */
         for (int colour = 1; colour < line.colors; colour++) {
+            final long colorSet = Colors.of(colour);
             int prevEnd = 0;
             for (int block = 0; block < clueLength; block++) {
                 if (line.clue.get(block).color != colour) continue;
                 final int nextStart = minStart[block];
-                if (prevEnd < nextStart)
-                    for (BitSet cell : line.cells.subList(prevEnd, nextStart))
-                    cell.clear(colour);
+                if (prevEnd < nextStart) {
+                    for (CellIterator iter =
+                        line.cells.iterator(prevEnd, nextStart); iter.more();
+                         iter.next())
+                        iter.removeAll(colorSet);
+                }
                 prevEnd = maxEnd[block];
             }
-            if (prevEnd < lineLength)
-                for (BitSet cell : line.cells.subList(prevEnd, lineLength))
-                cell.clear(colour);
+            if (prevEnd < lineLength) {
+                for (CellIterator iter =
+                    line.cells.iterator(prevEnd, lineLength); iter.more();
+                     iter.next())
+                    iter.removeAll(colorSet);
+            }
         }
 
         return Result.EXHAUSTED;

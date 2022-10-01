@@ -35,10 +35,10 @@
 
 package uk.ac.lancs.nonogram.line;
 
-import uk.ac.lancs.nonogram.clue.Block;
-import java.util.BitSet;
 import java.util.Collections;
 import java.util.List;
+import uk.ac.lancs.nonogram.clue.Block;
+import uk.ac.lancs.nonogram.clue.CellSequence;
 
 /**
  * Holds the state of a line for working on in isolation.
@@ -71,7 +71,7 @@ public class LineChallenge {
      * 
      * @resume The state of the cells
      */
-    public final List<BitSet> cells;
+    public final CellSequence cells;
 
     /**
      * @resume The cache of line-solver states pertaining to this line
@@ -91,10 +91,10 @@ public class LineChallenge {
      * @param cache the cache of line-solver states pertaining to this
      * line
      */
-    public LineChallenge(int colors, List<Block> clue, List<BitSet> cells,
-                        Cache cache) {
+    public LineChallenge(int colors, List<Block> clue, CellSequence cells,
+                         Cache cache) {
         this.colors = colors;
-        this.cells = Collections.unmodifiableList(cells);
+        this.cells = cells.readOnly();
         this.clue = Collections.unmodifiableList(clue);
         this.cache = cache;
     }

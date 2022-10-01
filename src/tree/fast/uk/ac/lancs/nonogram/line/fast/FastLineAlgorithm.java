@@ -35,9 +35,11 @@
 
 package uk.ac.lancs.nonogram.line.fast;
 
-import java.util.BitSet;
 import java.util.List;
 import uk.ac.lancs.nonogram.clue.Block;
+import uk.ac.lancs.nonogram.clue.CellIterator;
+import uk.ac.lancs.nonogram.clue.CellSequence;
+import uk.ac.lancs.nonogram.clue.Colors;
 import uk.ac.lancs.nonogram.line.LineAlgorithm;
 import uk.ac.lancs.nonogram.line.LineChallenge;
 import uk.ac.lancs.nonogram.line.LineSolver;
@@ -78,7 +80,7 @@ public final class FastLineAlgorithm implements LineAlgorithm {
      * 
      * @return true if an inconsistency was found
      */
-    public static boolean push(int[] min, List<? extends BitSet> cells,
+    public static boolean push(int[] min, CellSequence cells,
                                List<? extends Block> clue) {
         final int clueLength = clue.size();
         final int lineLength = cells.size();
@@ -88,9 +90,11 @@ public final class FastLineAlgorithm implements LineAlgorithm {
         int colors = 2;
         System.err.println();
         for (int color = 0; color < colors; color++) {
-            for (BitSet cell : cells) {
-                if (cell.length() > colors) colors = cell.length();
-                if (cell.get(color))
+            for (CellIterator iter = cells.iterator(); iter.more();
+                 iter.next()) {
+                final int clen = iter.width();
+                if (clen > colors) colors = clen;
+                if (iter.has(color))
                     System.err.print(color);
                 else
                     System.err.print('-');
@@ -152,9 +156,10 @@ public final class FastLineAlgorithm implements LineAlgorithm {
                  * checked. */
                 int done = 0;
                 assert min[block] + length + slide <= lineLength;
-                for (BitSet cell : cells.subList(min[block],
-                                                 min[block] + slide)) {
-                    if (!cell.get(0)) {
+                for (CellIterator iter =
+                    cells.iterator(min[block], min[block] + slide); iter.more();
+                     iter.next()) {
+                    if (iter.lacks(0)) {
                         /* We have exposed a cell which cannot be blank.
                          * Find a previous block of a compatible color,
                          * and make it slide far enough to cover this
@@ -162,9 +167,8 @@ public final class FastLineAlgorithm implements LineAlgorithm {
                         System.err.printf("  Exposed non-blank at %d%n",
                                           done + min[block]);
                         final int newEnd = min[block] + done;
-                        BitSet endState = cells.get(newEnd);
                         while (--block > 0 &&
-                            !endState.get(blocks[block].color))
+                            cells.lacks(newEnd, blocks[block].color))
                             ;
                         /* Fail if we can't find a suitable earlier
                          * block. */
@@ -192,11 +196,12 @@ public final class FastLineAlgorithm implements LineAlgorithm {
              * by it. If they are, we'll have to slide beyond the first
              * contradictory cell. */
             slide = length - check;
-            for (BitSet cell : cells.subList(min[block] + length - check,
-                                             min[block] + length)) {
+            for (CellIterator iter = cells.iterator(min[block] + length - check,
+                                                    min[block] + length);
+                 iter.more(); iter.next()) {
                 slide++;
                 check--;
-                if (!cell.get(color)) {
+                if (iter.lacks(color)) {
                     /* The cell covered by this block can't be of the
                      * block's color. We must ask it to skip over enough
                      * cells to avoid it. */
@@ -215,11 +220,12 @@ public final class FastLineAlgorithm implements LineAlgorithm {
                 /* We have succeeded if there are no more blocks, and
                  * the remaining cells can be dots. */
                 slide = min[block] + length;
-                for (BitSet cell : cells.subList(slide, lineLength)) {
-                    if (!cell.get(0)) {
+                for (CellIterator iter = cells.iterator(slide, lineLength);
+                     iter.more(); iter.next()) {
+                    if (iter.lacks(0)) {
                         /* There's a trailing cell that cannot be blank.
                          * Find a block of a compatible color. */
-                        while (block > -1 && !cell.get(blocks[block].color))
+                        while (block > -1 && iter.lacks(blocks[block].color))
                             block--;
                         if (block < 0) {
                             /* We have no blocks at all for this cell.
@@ -246,14 +252,15 @@ public final class FastLineAlgorithm implements LineAlgorithm {
                 /* Being of the same color, the next block must have a
                  * gap before it. */
                 final int gap = min[block - 1] + length;
-                BitSet gapState = cells.get(gap);
+                final long gapState = cells.get(gap);
                 min[block] = gap + 1;
 
                 /* Check that the skipped cell can be blank. */
-                if (!gapState.get(0)) {
+                if (Colors.lacks(gapState, 0)) {
                     /* It can't be blank, so we have to find an earlier
                      * block of a compatible color. */
-                    while (--block > 0 && !gapState.get(blocks[block].color))
+                    while (--block > 0 &&
+                        Colors.lacks(gapState, blocks[block].color))
                         ;
                     /* Fail if we can't find a suitable earlier
                      * block. */

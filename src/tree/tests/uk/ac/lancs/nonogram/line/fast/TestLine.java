@@ -2,11 +2,12 @@
 
 package uk.ac.lancs.nonogram.line.fast;
 
-import java.util.BitSet;
 import java.util.List;
 import junit.framework.TestCase;
 import org.junit.Test;
 import uk.ac.lancs.nonogram.clue.Block;
+import uk.ac.lancs.nonogram.clue.CellSequence;
+import uk.ac.lancs.nonogram.clue.Colors;
 import uk.ac.lancs.nonogram.line.LineCandidate;
 import static uk.ac.lancs.nonogram.line.LineCandidate.createClue;
 import static uk.ac.lancs.nonogram.line.LineCandidate.createLine;
@@ -17,7 +18,7 @@ public final class TestLine extends TestCase {
         assertEquals(expected, LineCandidate.cellsToString(createLine(source)));
     }
 
-    private static void testPush(List<BitSet> cells, List<Block> clue,
+    private static void testPush(CellSequence cells, List<Block> clue,
                                  int... expected) {
         String prefix = LineCandidate.cellsToString(cells) + ' '
             + LineCandidate.clueToString(clue);
@@ -35,12 +36,12 @@ public final class TestLine extends TestCase {
     @Test
     public void testSomething() {
         assertEquals(3, createLine(" -#").size());
-        assertTrue(createLine(" -#").get(0).get(0));
-        assertTrue(createLine(" -#").get(0).get(1));
-        assertTrue(createLine(" -#").get(1).get(0));
-        assertFalse(createLine(" -#").get(1).get(1));
-        assertFalse(createLine(" -#").get(2).get(0));
-        assertTrue(createLine(" -#").get(2).get(1));
+        assertTrue(Colors.has(createLine(" -#").get(0), 0));
+        assertTrue(Colors.has(createLine(" -#").get(0), 1));
+        assertTrue(Colors.has(createLine(" -#").get(1), 0));
+        assertFalse(Colors.has(createLine(" -#").get(1), 1));
+        assertFalse(Colors.has(createLine(" -#").get(2), 0));
+        assertTrue(Colors.has(createLine(" -#").get(2), 1));
 
         parseGenerate("000123000321000", "---RGB---BGR---");
         parseGenerate("000123   321000", "---RGB   BGR---");
@@ -54,9 +55,9 @@ public final class TestLine extends TestCase {
         assertEquals(1, createClue("4,1R,3").get(1).length);
         assertEquals(3, createClue("4,1R,3").get(2).length);
 
-        List<BitSet> cells1 = createLine("----           ----");
-        List<BitSet> cells2 = createLine("----           --#-");
-        List<BitSet> cells3 = createLine("---- #      R  ----", 3);
+        CellSequence cells1 = createLine("----           ----");
+        CellSequence cells2 = createLine("----           --#-");
+        CellSequence cells3 = createLine("---- #      R  ----", 3);
 
         List<Block> clue1 = createClue("6");
         List<Block> clue2 = createClue("6,4");

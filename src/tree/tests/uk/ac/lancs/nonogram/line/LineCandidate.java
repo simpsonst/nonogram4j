@@ -2,10 +2,7 @@
 
 package uk.ac.lancs.nonogram.line;
 
-import uk.ac.lancs.nonogram.clue.Block;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,15 +12,20 @@ import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import uk.ac.lancs.nonogram.clue.ArrayCellSequence;
+import uk.ac.lancs.nonogram.clue.Block;
+import uk.ac.lancs.nonogram.clue.CellIterator;
+import uk.ac.lancs.nonogram.clue.CellSequence;
+import uk.ac.lancs.nonogram.clue.Colors;
 
 public class LineCandidate {
-    public final List<BitSet> complete;
+    public final CellSequence complete;
 
-    public final List<BitSet> broken;
+    public final CellSequence broken;
 
     public final List<Block> clue;
 
-    private LineCandidate(List<BitSet> complete, List<BitSet> broken,
+    private LineCandidate(CellSequence complete, CellSequence broken,
                           List<Block> clue) {
         this.complete = complete;
         this.broken = broken;
@@ -71,24 +73,21 @@ public class LineCandidate {
         return Collections.unmodifiableList(result);
     }
 
-    public static List<BitSet> createLine(Random rng, final int colours,
+    public static CellSequence createLine(Random rng, final int colours,
                                           final int length) {
-        BitSet[] complete = new BitSet[length];
-        for (int i = 0; i < length; i++) {
-            BitSet cell = new BitSet(colours);
-            cell.set(rng.nextInt(colours));
-            complete[i] = cell;
-        }
-        return Arrays.asList(complete);
+        long[] complete = new long[length];
+        for (int i = 0; i < length; i++)
+            complete[i] |= Colors.of(rng.nextInt(colours));
+        return new ArrayCellSequence(complete);
     }
 
-    public static List<BitSet> createLine(String source) {
+    public static CellSequence createLine(String source) {
         return createLine(source, 2);
     }
 
-    public static List<BitSet> createLine(String source, final int colours) {
+    public static CellSequence createLine(String source, final int colours) {
         final int length = source.length();
-        BitSet[] complete = new BitSet[length];
+        long[] complete = new long[length];
         Collection<Character> usedChars = new LinkedHashSet<>();
         for (int i = 0; i < length; i++) {
             char c = source.charAt(i);
@@ -102,51 +101,61 @@ public class LineCandidate {
         }
         for (int i = 0; i < length; i++) {
             char c = source.charAt(i);
-            BitSet cell = new BitSet(colours);
-            if (c == '-') {
-                cell.set(0);
-            } else if (c == ' ') {
-                cell.set(0, colours);
-            } else {
+            long cell = 0;
+            switch (c) {
+            case '-':
+                cell |= Colors.of(0);
+                break;
+
+            case ' ':
+                cell |= Colors.newCellLong(colours);
+                break;
+
+            default:
                 int col = map.get(c);
-                cell.set(col);
+                cell |= Colors.of(col);
+                break;
             }
             complete[i] = cell;
         }
-        return Arrays.asList(complete);
+        return new ArrayCellSequence(complete);
     }
 
-    public static List<Block> createClue(List<? extends BitSet> cells) {
+    public static List<Block> createClue(CellSequence cells) {
         List<Block> result = new ArrayList<>();
         int color = -1;
         int start = 0;
         int pos = 0;
-        for (BitSet cell : cells) {
-            if (cell.cardinality() != 1)
+        for (CellIterator iter = cells.iterator(); iter.more(); iter.next()) {
+            final int newCol = iter.color();
+            switch (newCol) {
+            case Colors.INCONSISTENT_COLOR:
+            case Colors.INDETERMINATE_COLOR:
                 throw new IllegalArgumentException("Undetermined colour at "
                     + pos);
-            int newCol = cell.nextSetBit(0);
-            if (newCol != color) {
-                if (color > 0) result.add(Block.of(pos - start, color));
-                start = pos;
-                color = newCol;
+
+            default:
+                if (newCol != color) {
+                    if (color > 0) result.add(Block.of(pos - start, color));
+                    start = pos;
+                    color = newCol;
+                }
+                pos++;
+                break;
             }
-            pos++;
         }
         if (color > 0) result.add(Block.of(pos - start, color));
         return result;
     }
 
-    public static List<BitSet> copyLine(List<? extends BitSet> in) {
-        List<BitSet> out = new ArrayList<>(in.size());
-        for (BitSet inc : in) {
-            BitSet outc = (BitSet) inc.clone();
-            out.add(outc);
-        }
-        return out;
+    public static CellSequence copyLine(CellSequence in) {
+        long[] base = new long[in.size()];
+        for (int i = 0; i < in.size(); i++)
+            base[i] = in.get(i);
+        return new ArrayCellSequence(base);
     }
 
-    public static List<BitSet> breakLine(Random rng, List<BitSet> in) {
+    public static CellSequence breakLine(Random rng, CellSequence in) {
         final int length = in.size();
         boolean strip = rng.nextBoolean();
         int pos = 0;
@@ -154,19 +163,20 @@ public class LineCandidate {
             final int rem = length - pos;
             int skip = rng.nextInt(rng.nextInt(rem)) + 1;
             if (strip) {
-                for (BitSet cell : in.subList(pos, pos + skip))
-                    cell.clear();
+                while (skip-- > 0)
+                    in.put(pos++, 0);
+            } else {
+                pos += skip;
             }
-            pos += skip;
+            strip = !strip;
             assert pos <= length;
         }
         return in;
     }
 
-    public static List<BitSet> breakLine(String pattern, List<BitSet> in) {
-        int pos = 0;
-        for (BitSet cell : in) {
-            if (pattern.charAt(pos) == ' ') cell.clear();
+    public static CellSequence breakLine(String pattern, CellSequence in) {
+        for (int pos = 0; pos < in.size(); pos++) {
+            if (pattern.charAt(pos) == ' ') in.put(pos, 0);
             pos++;
         }
         return in;
@@ -174,32 +184,29 @@ public class LineCandidate {
 
     public static LineCandidate createCandidate(Random rng, final int colours,
                                                 final int length) {
-        List<BitSet> complete = createLine(rng, colours, length);
+        CellSequence complete = createLine(rng, colours, length);
         List<Block> clue = createClue(complete);
-        List<BitSet> broken = breakLine(rng, copyLine(complete));
+        CellSequence broken = breakLine(rng, copyLine(complete));
 
-        return new LineCandidate(Collections.unmodifiableList(complete),
-                                 Collections.unmodifiableList(broken),
+        return new LineCandidate(complete.readOnly(), broken.readOnly(),
                                  Collections.unmodifiableList(clue));
     }
 
     public static LineCandidate createCandidate(Random rng, String source) {
-        List<BitSet> complete = createLine(source);
+        CellSequence complete = createLine(source);
         List<Block> clue = createClue(complete);
-        List<BitSet> broken = breakLine(rng, copyLine(complete));
+        CellSequence broken = breakLine(rng, copyLine(complete));
 
-        return new LineCandidate(Collections.unmodifiableList(complete),
-                                 Collections.unmodifiableList(broken),
+        return new LineCandidate(complete.readOnly(), broken.readOnly(),
                                  Collections.unmodifiableList(clue));
     }
 
     public static LineCandidate createCandidate(String source, String pattern) {
-        List<BitSet> complete = createLine(source);
+        CellSequence complete = createLine(source);
         List<Block> clue = createClue(complete);
-        List<BitSet> broken = breakLine(pattern, copyLine(complete));
+        CellSequence broken = breakLine(pattern, copyLine(complete));
 
-        return new LineCandidate(Collections.unmodifiableList(complete),
-                                 Collections.unmodifiableList(broken),
+        return new LineCandidate(complete.readOnly(), broken.readOnly(),
                                  Collections.unmodifiableList(clue));
     }
 
@@ -222,20 +229,21 @@ public class LineCandidate {
         return out.toString();
     }
 
-    public static String cellsToString(List<? extends BitSet> in) {
+    public static String cellsToString(CellSequence in) {
         StringBuilder out = new StringBuilder(in.size());
-        for (BitSet cell : in) {
-            switch (cell.cardinality()) {
-            case 0:
+        for (CellIterator iter = in.iterator(); iter.more(); iter.next()) {
+            int color = iter.color();
+            switch (color) {
+            case Colors.INCONSISTENT_COLOR:
                 out.append('!');
                 break;
 
-            case 1:
-                out.append(cell.nextSetBit(0));
+            case Colors.INDETERMINATE_COLOR:
+                out.append(' ');
                 break;
 
             default:
-                out.append(' ');
+                out.append(color);
                 break;
             }
         }
