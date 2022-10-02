@@ -37,5 +37,5 @@
  * @resume Fundamental types for the representation and display of
  * puzzles
  */
-package uk.ac.lancs.nonogram.aspect;
+package uk.ac.lancs.nonogram;
 

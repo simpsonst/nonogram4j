@@ -33,44 +33,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package uk.ac.lancs.nonogram.aspect;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
-import java.util.Locale;
+package uk.ac.lancs.nonogram;
 
 /**
- * Converts between puzzles and text formats.
+ * Indexes tiles based on current state.
  * 
  * @author simpsons
  */
-public interface Format {
-    /**
-     * Write a puzzle to a character stream.
-     * 
-     * @param puzzle the puzzle to write
-     * 
-     * @param out the stream to write to
-     * 
-     * @throws IOException if an I/O error occurs
-     */
-    void write(Puzzle puzzle, Writer out) throws IOException;
+public class Hue {
+    private Hue() {}
 
     /**
-     * Read a puzzle from a character stream.
+     * Get a distinct state that equals no other.
      * 
-     * @param in the stream to read from
-     * 
-     * @param defaultLocale the locale to assume for unspecified
-     * meta-data
-     * 
-     * @return the parsed puzzle
-     * 
-     * @throws IOException if an I/O error occurs
-     * 
-     * @throws IllegalArgumentException if puzzle is incorrectly
-     * formatted
+     * @return a distinct state
      */
-    Puzzle read(Reader in, Locale defaultLocale) throws IOException;
+    public static Hue distinct() {
+        return new Hue() {
+            @Override
+            public String toString() {
+                return "distinct";
+            }
+        };
+    }
+
+    /**
+     * Represents a cell in an indeterminate state.
+     */
+    public static final Hue UNKNOWN = new Hue() {
+        @Override
+        public String toString() {
+            return "unknown";
+        }
+    };
+
+    /**
+     * Represents a cell known to be in the background colour.
+     */
+    public static final Hue BACKGROUND = new Hue() {
+        @Override
+        public String toString() {
+            return "background";
+        }
+    };
 }

@@ -38,7 +38,7 @@ package uk.ac.lancs.nonogram.geom.rect;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Random;
-import uk.ac.lancs.nonogram.aspect.Palette;
+import uk.ac.lancs.nonogram.Palette;
 
 /**
  * The width and height are fixed. All other state (cell colours,

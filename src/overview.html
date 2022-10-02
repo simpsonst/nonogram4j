@@ -29,7 +29,7 @@ LineHeuristic lineHeuristic = Plugins.findLineHeuristic("fast");
 
   <p>
     Next, the solver should create a
-    {@link uk.ac.lancs.nonogram.aspect.Puzzle}
+    {@link uk.ac.lancs.nonogram.Puzzle}
     in which to load the XML representation of the puzzle:
   </p>
 
@@ -120,7 +120,11 @@ for ( ; ; ) {
 
   @package core uk.ac.lancs.nonogram
 
-  @package core uk.ac.lancs.nonogram.aspect
+  @package core uk.ac.lancs.nonogram.clue
+
+  @package core uk.ac.lancs.nonogram.display
+
+  @package core uk.ac.lancs.nonogram.layout
 
   @package support uk.ac.lancs.nonogram.util
 
@@ -135,6 +139,8 @@ for ( ; ; ) {
   @package plugins uk.ac.lancs.nonogram.line.fast
 
   @package plugins uk.ac.lancs.nonogram.geom.rect
+
+  @package core uk.ac.lancs.nonogram.solver.swing
 
   @package plugins uk.ac.lancs.nonogram.line.heuristic.fast
 

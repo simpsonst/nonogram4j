@@ -36,7 +36,7 @@
 package uk.ac.lancs.nonogram.geom;
 
 import uk.ac.lancs.nonogram.display.Display;
-import uk.ac.lancs.nonogram.aspect.Palette;
+import uk.ac.lancs.nonogram.Palette;
 
 /**
  * @resume A display that includes a type-specific widget

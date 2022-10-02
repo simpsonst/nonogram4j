@@ -37,7 +37,7 @@
  */
 
 /**
- * Defines classes for internal representation of clues.
+ * Defines classes for internal representation of clues and colours.
  * 
  * <p>
  * A clue is a sequence of blocks, where each block has a positive

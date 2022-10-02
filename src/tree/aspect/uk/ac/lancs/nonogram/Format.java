@@ -33,27 +33,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package uk.ac.lancs.nonogram.aspect;
+package uk.ac.lancs.nonogram;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.util.Locale;
 
 /**
- * Identifies the shape of a tile.
+ * Converts between puzzles and text formats.
  * 
  * @author simpsons
  */
-public enum Shape {
+public interface Format {
     /**
-     * The cell is filled with the background colour.
+     * Write a puzzle to a character stream.
+     * 
+     * @param puzzle the puzzle to write
+     * 
+     * @param out the stream to write to
+     * 
+     * @throws IOException if an I/O error occurs
      */
-    BLANK,
+    void write(Puzzle puzzle, Writer out) throws IOException;
 
     /**
-     * The cell is filled with the background colour, and a dot or small
-     * circle is drawn within it in the foreground colour.
+     * Read a puzzle from a character stream.
+     * 
+     * @param in the stream to read from
+     * 
+     * @param defaultLocale the locale to assume for unspecified
+     * meta-data
+     * 
+     * @return the parsed puzzle
+     * 
+     * @throws IOException if an I/O error occurs
+     * 
+     * @throws IllegalArgumentException if puzzle is incorrectly
+     * formatted
      */
-    DOT,
-
-    /**
-     * The cell is filled with the foreground colour.
-     */
-    SOLID;
+    Puzzle read(Reader in, Locale defaultLocale) throws IOException;
 }

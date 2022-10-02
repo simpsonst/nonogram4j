@@ -33,7 +33,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package uk.ac.lancs.nonogram.aspect;
+package uk.ac.lancs.nonogram;
 
 import java.util.Collection;
 import java.util.Collections;
