@@ -36,8 +36,6 @@
 package uk.ac.lancs.nonogram.layout;
 
 import java.util.BitSet;
-import java.util.NavigableMap;
-import java.util.TreeMap;
 
 /**
  * Identifies a cell in a puzzle, and all lines that intersect at it.
@@ -47,26 +45,6 @@ import java.util.TreeMap;
  * @author simpsons
  */
 public interface Cell {
-    /**
-     * clue Create a map out of a collection of cell descriptions.
-     *
-     * @param cells the cell descriptions, such as returned by
-     * {@link Layout#cells()}
-     *
-     * @return a map of the cells indexed by each cell's
-     * {@link Cell#index() index}
-     * 
-     * @deprecated This method should be redundant.
-     */
-    @Deprecated
-    public static NavigableMap<Integer, Cell>
-        createCellMap(Iterable<? extends Cell> cells) {
-        TreeMap<Integer, Cell> cellMap = new TreeMap<>();
-        for (Cell cell : cells)
-            cellMap.put(cell.index(), cell);
-        return cellMap;
-    }
-
     /**
      * Get the cell's identifier.
      * 
