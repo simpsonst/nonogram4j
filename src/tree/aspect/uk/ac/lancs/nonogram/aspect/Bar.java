@@ -58,8 +58,8 @@ public final class Bar {
      * @throws IllegalArgumentException if the block's colour is
      * unrecognized by the mapping
      */
-    public static Block
-        of(Bar block, Function<? super Hue, ? extends Number> mapping) {
+    public static Block of(Bar block,
+                           Function<? super Hue, ? extends Number> mapping) {
         int color = mapping.apply(block.color).intValue();
         if (color < 1)
             throw new IllegalArgumentException("bad block color " + block);

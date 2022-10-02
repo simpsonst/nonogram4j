@@ -124,11 +124,8 @@ final class RectangularDisplay<C> implements WidgetDisplay<C> {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        commit(palette,
-                               newLineLevels,
-                               newLineActivityStates,
-                               newLineActivity,
-                               newCellStates);
+                        commit(palette, newLineLevels, newLineActivityStates,
+                               newLineActivity, newCellStates);
                     }
                 });
             }

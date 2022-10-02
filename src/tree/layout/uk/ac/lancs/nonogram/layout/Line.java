@@ -2,8 +2,8 @@
 
 package uk.ac.lancs.nonogram.layout;
 
-import uk.ac.lancs.nonogram.clue.Block;
 import java.util.List;
+import uk.ac.lancs.nonogram.clue.Block;
 
 /**
  * Describes a line within a puzzle.

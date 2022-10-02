@@ -37,8 +37,8 @@
  * The Nonogram library supports several types of plug-ins, all with
  * essentially the same form. To define a new plug-in type, create an
  * interface which merely extends
- * {@link uk.ac.lancs.nonogram.plugin.PluginLoader}, giving the
- * plug-in type as the type parameter.
+ * {@link uk.ac.lancs.nonogram.plugin.PluginLoader}, giving the plug-in
+ * type as the type parameter.
  * 
  * @resume Common plug-in classes
  */

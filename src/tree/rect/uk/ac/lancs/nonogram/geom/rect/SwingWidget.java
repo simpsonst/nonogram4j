@@ -112,9 +112,7 @@ final class SwingWidget extends JPanel implements Updatable {
         if (false) {
             System.err
                 .printf("Fitting (%d+2,%d+2) cells to (%d,%d) pixels...%n",
-                        state.width,
-                        state.height,
-                        availableWidth,
+                        state.width, state.height, availableWidth,
                         availableHeight);
         }
 
@@ -175,11 +173,8 @@ final class SwingWidget extends JPanel implements Updatable {
         y += offset.y;
 
         if (false) {
-            System.err.printf("  Repainting [%d,%d]-(%d,%d)%n...",
-                              x,
-                              y,
-                              x + scale,
-                              y + scale);
+            System.err.printf("  Repainting [%d,%d]-(%d,%d)%n...", x, y,
+                              x + scale, y + scale);
         }
         repaint(x, y, scale, scale);
     }
@@ -247,17 +242,12 @@ final class SwingWidget extends JPanel implements Updatable {
         final int maxy = Math.min((clip.y + clip.height + step - 1) / step,
                                   state.height + 2);
         if (false) {
-            System.err.printf("Repaint pixels [%d,%d]-(%d,%d)%n",
-                              clip.x,
-                              clip.y,
-                              clip.x + clip.width,
+            System.err.printf("Repaint pixels [%d,%d]-(%d,%d)%n", clip.x,
+                              clip.y, clip.x + clip.width,
                               clip.y + clip.height);
             System.err.printf("   Step = %d + %d = %d%n", scale, margin, step);
-            System.err.printf("Repainting cells [%d,%d] to (%d,%d)...\n",
-                              minx,
-                              miny,
-                              maxx,
-                              maxy);
+            System.err.printf("Repainting cells [%d,%d] to (%d,%d)...\n", minx,
+                              miny, maxx, maxy);
         }
 
         /* Repaint the indicated cells according to their current state
@@ -267,9 +257,7 @@ final class SwingWidget extends JPanel implements Updatable {
                 if (x == 0) {
                     if (y > 0 && y <= state.height) {
                         /* This is a row activity indicator. */
-                        plotLight(g,
-                                  x * step,
-                                  y * step,
+                        plotLight(g, x * step, y * step,
                                   state.activities.get(y - 1) ?
                                       ACTIVITY_SHADING : INACTIVITY_SHADING);
                     }
@@ -282,17 +270,13 @@ final class SwingWidget extends JPanel implements Updatable {
                         } else {
                             if (level > state.algos) level = state.algos;
                         }
-                        plotLight(g,
-                                  x * step,
-                                  y * step,
+                        plotLight(g, x * step, y * step,
                                   ALGORITHM_SHADING[level]);
                     }
                 } else if (y == 0) {
                     if (x > 0 && x <= state.width) {
                         /* This is a column activity indicator. */
-                        plotLight(g,
-                                  x * step,
-                                  y * step,
+                        plotLight(g, x * step, y * step,
                                   state.activities.get(x - 1 + state.height) ?
                                       ACTIVITY_SHADING : INACTIVITY_SHADING);
                     }
@@ -305,9 +289,7 @@ final class SwingWidget extends JPanel implements Updatable {
                         } else {
                             if (level > state.algos) level = state.algos;
                         }
-                        plotLight(g,
-                                  x * step,
-                                  y * step,
+                        plotLight(g, x * step, y * step,
                                   ALGORITHM_SHADING[level]);
                     }
                 } else {
