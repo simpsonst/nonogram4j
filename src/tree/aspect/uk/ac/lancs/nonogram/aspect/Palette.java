@@ -36,7 +36,6 @@
 package uk.ac.lancs.nonogram.aspect;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.List;
 import uk.ac.lancs.nonogram.clue.Colors;
 
@@ -48,6 +47,8 @@ import uk.ac.lancs.nonogram.clue.Colors;
  */
 public final class Palette {
     private final List<Tile> colors;
+
+    private final long allColors;
 
     private final Tile unknown;
 
@@ -121,17 +122,7 @@ public final class Palette {
     private Palette(Builder builder) {
         this.colors = new ArrayList<>(builder.colors);
         this.unknown = builder.unknown;
-    }
-
-    /**
-     * Create an initial working state for a cell in a puzzle using this
-     * palette.
-     * 
-     * @return a bit set with bits 0 to <var>n</var>-1 set, where
-     * <var>n</var> is the number of colours
-     */
-    public BitSet createWorkingState() {
-        return Colors.newCell(colors());
+        this.allColors = Colors.all(this.colors.size());
     }
 
     /**
@@ -176,17 +167,22 @@ public final class Palette {
      * 
      * @throws IllegalArgumentException if no colours are possible
      */
-    public Tile getColor(BitSet allowed) {
-        int first = allowed.nextSetBit(0);
-        if (first == -1)
+    public Tile getColor(long allowed) {
+        if ((allColors & allowed) != 0)
+            throw new IllegalArgumentException("Colour "
+                + Long.numberOfTrailingZeros(allowed) + " out of range (max "
+                + (colors() - 1) + ")");
+        int cc = Colors.color(allowed);
+        switch (cc) {
+        case Colors.INCONSISTENT_COLOR:
             throw new IllegalArgumentException("No colours possible");
-        if (first >= colors()) throw new IllegalArgumentException("Colour "
-            + first + " out of range (max " + (colors() - 1) + ")");
-        int next = allowed.nextSetBit(first + 1);
-        if (next == -1) return getColor(first);
-        if (next >= colors()) throw new IllegalArgumentException("Colour "
-            + next + " out of range (max " + (colors() - 1) + ")");
-        return getUnknown();
+
+        case Colors.INDETERMINATE_COLOR:
+            return getUnknown();
+
+        default:
+            return getColor(cc);
+        }
     }
 
     /**

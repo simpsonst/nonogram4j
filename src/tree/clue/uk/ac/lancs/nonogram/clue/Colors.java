@@ -38,38 +38,27 @@
 
 package uk.ac.lancs.nonogram.clue;
 
-import java.util.BitSet;
-
 /**
  * Provides utilities for manipulating sets of internal colour numbers.
+ * These are always in the range 0 to <var>n</var>&minus;1, where
+ * <var>n</var> is the total number of colours. Colour 0 is always
+ * interpreted as the background colour, i.e., no block has this colour.
+ * {@code long} is used to represent a set of up to 64 colours, where
+ * bit <var>i</var> is set if and only if colour <var>i</var> is
+ * possible. The static methods of this class help to convert between
+ * colour numbers in [0, <var>n</var>) and colour sets held as
+ * {@code long}s.
+ * 
+ * <p>
+ * The class {@link CellSequence} provides an abstraction over an array
+ * of {@code long}s, providing many of the operations here on a colour
+ * set at a given index. {@link CellIterator} permits iteration over
+ * such a sequence.
  *
  * @author simpsons
  */
 public final class Colors {
     private Colors() {}
-
-    /**
-     * Create an initial working state for a cell in a puzzle with a
-     * given number of colours.
-     *
-     * @param colors the number of colours in the puzzle
-     *
-     * @return a bit set with bits 0 to <var>n</var>-1 set, where
-     * <var>n</var> is the number of colours
-     *
-     * @throws IllegalArgumentException if the number of colours is too
-     * low
-     * 
-     * @deprecated {@link BitSet}s will be dropped as cell state.
-     */
-    @Deprecated
-    public static BitSet newCell(int colors) {
-        if (colors < 2)
-            throw new IllegalArgumentException("Insufficient colours");
-        BitSet result = new BitSet();
-        result.set(0, colors);
-        return result;
-    }
 
     /**
      * Create a colour set of only one colour.
@@ -151,7 +140,7 @@ public final class Colors {
      * @throws IllegalArgumentException if the number of colours is too
      * low
      */
-    public static long newCellLong(int colors) {
+    public static long all(int colors) {
         if (colors < 0)
             throw new IllegalArgumentException("-ve colors: " + colors);
         if (colors > 64)

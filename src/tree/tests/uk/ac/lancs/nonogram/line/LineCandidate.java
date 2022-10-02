@@ -108,7 +108,7 @@ public class LineCandidate {
                 break;
 
             case ' ':
-                cell |= Colors.newCellLong(colours);
+                cell |= Colors.all(colours);
                 break;
 
             default:

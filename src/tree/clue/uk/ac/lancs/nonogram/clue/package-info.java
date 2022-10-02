@@ -49,14 +49,13 @@
  * <p>
  * Colour numbers are non-negative integers up to a maximum. Zero is
  * reserved as the background colour, so no block has this colour
- * number.
- * 
- * <p>
- * During solving, cells have a <dfn>working state</dfn> representing
- * the set of colours that have not yet been eliminated. A cell state is
- * represented by a {@code long}, with bit 0 set if colour 0 has not yet
- * been eliminated, bit 1 if colour 1, and so on. {@link Colors}
- * includes static methods for manipulating such states.
+ * number. During solving, cells have a <dfn>working state</dfn>
+ * representing the set of colours that have not yet been eliminated. A
+ * cell state is represented by a {@code long}, with bit 0 set if colour
+ * 0 has not yet been eliminated, bit 1 if colour 1, and so on.
+ * {@link Colors} includes static methods for manipulating such states,
+ * and {@link CellSequence} provides similar operations over an array of
+ * {@code long}s.
  * 
  * @author simpsons
  */

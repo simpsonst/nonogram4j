@@ -205,7 +205,7 @@ public final class Grid {
          * update the display, as 'unknown' is the default state. */
         cells = new long[cellCount];
         for (int i = 0; i < cells.length; i++)
-            cells[i] = Colors.newCellLong(colors);
+            cells[i] = Colors.all(colors);
 
         /* Set weights and algorithm levels. Update the display to show
          * the levels. */
