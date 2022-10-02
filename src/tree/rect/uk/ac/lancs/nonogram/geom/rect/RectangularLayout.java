@@ -44,8 +44,6 @@ import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import uk.ac.lancs.nonogram.layout.Cell;
-import uk.ac.lancs.nonogram.layout.Line;
 import uk.ac.lancs.nonogram.Bar;
 import uk.ac.lancs.nonogram.Clue;
 import uk.ac.lancs.nonogram.Hue;
@@ -55,6 +53,8 @@ import uk.ac.lancs.nonogram.geom.DisplayableLayout;
 import uk.ac.lancs.nonogram.geom.NullWidgetDisplayFactory;
 import uk.ac.lancs.nonogram.geom.WidgetDisplay;
 import uk.ac.lancs.nonogram.geom.WidgetDisplayFactory;
+import uk.ac.lancs.nonogram.layout.Cell;
+import uk.ac.lancs.nonogram.layout.Line;
 
 /**
  * The number of cells is the width <var>w</var> times the height
@@ -360,8 +360,7 @@ public class RectangularLayout implements DisplayableLayout {
                         DisplayState state =
                             new DisplayState(width, height, algos);
                         SwingWidget widget = new SwingWidget(state);
-                        return new RectangularDisplay<Component>(state, widget,
-                                                                 widget);
+                        return new RectangularDisplay<>(state, widget, widget);
                     }
 
                     @Override

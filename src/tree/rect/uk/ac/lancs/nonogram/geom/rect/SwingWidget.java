@@ -69,14 +69,6 @@ final class SwingWidget extends JPanel implements Updatable {
     public SwingWidget(final DisplayState state) {
         this.state = state;
         algoColours = createShading(MAX_LEVEL, MIN_LEVEL, state.algos + 1);
-        if (false) {
-            // TODO: Remove old code.
-            algoColours = new Color[state.algos + 1];
-            for (int i = 0; i < algoColours.length; i++) {
-                final float frac = (float) i / state.algos;
-                algoColours[i] = new Color(frac, frac, frac);
-            }
-        }
         ALGORITHM_SHADING = new Color[state.algos + 1][];
         updateShading();
 
@@ -92,15 +84,11 @@ final class SwingWidget extends JPanel implements Updatable {
             }
         };
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                Dimension preferredSize =
-                    new Dimension((state.width + 2) * 5 + 1,
-                                  (state.height + 2) * 5 + 1);
-                setPreferredSize(preferredSize);
-                addComponentListener(cl);
-            }
+        SwingUtilities.invokeLater(() -> {
+            Dimension preferredSize = new Dimension((state.width + 2) * 5 + 1,
+                                                    (state.height + 2) * 5 + 1);
+            setPreferredSize(preferredSize);
+            addComponentListener(cl);
         });
     }
 
