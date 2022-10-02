@@ -348,8 +348,7 @@ public class XMLFormat implements Format {
      * 
      * @param defaultLocale the locale to assume for untagged meta-data
      * 
-     * @param return the puzzle data extracted by parsing the input as
-     * XML
+     * @return the puzzle data extracted by parsing the input as XML
      * 
      * @throws SAXException if an XML error occurred
      * 
