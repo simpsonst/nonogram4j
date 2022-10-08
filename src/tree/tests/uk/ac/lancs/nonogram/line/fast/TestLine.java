@@ -35,25 +35,34 @@ public final class TestLine extends TestCase {
 
     @Test
     public void testSomething() {
-        assertEquals(3, createLine(" -#").size());
-        assertTrue(Colors.has(createLine(" -#").get(0), 0));
-        assertTrue(Colors.has(createLine(" -#").get(0), 1));
-        assertTrue(Colors.has(createLine(" -#").get(1), 0));
-        assertFalse(Colors.has(createLine(" -#").get(1), 1));
-        assertFalse(Colors.has(createLine(" -#").get(2), 0));
-        assertTrue(Colors.has(createLine(" -#").get(2), 1));
+        {
+            final CellSequence cells0 = createLine(" -#");
+            assertEquals(3, cells0.size());
+            assertTrue(Colors.has(cells0.get(0), 0));
+            assertTrue(Colors.has(cells0.get(0), 1));
+            assertTrue(Colors.has(cells0.get(1), 0));
+            assertFalse(Colors.has(cells0.get(1), 1));
+            assertFalse(Colors.has(cells0.get(2), 0));
+            assertTrue(Colors.has(cells0.get(2), 1));
+        }
 
         parseGenerate("000123000321000", "---RGB---BGR---");
         parseGenerate("000123   321000", "---RGB   BGR---");
 
         assertEquals(3, createClue("1,2,3").size());
-        assertEquals(3, createClue("1,2R,3").size());
-        assertEquals(1, createClue("1,2R,3").get(0).color);
-        assertEquals(2, createClue("1,2R,3").get(1).color);
-        assertEquals(1, createClue("1,2R,3").get(2).color);
-        assertEquals(4, createClue("4,1R,3").get(0).length);
-        assertEquals(1, createClue("4,1R,3").get(1).length);
-        assertEquals(3, createClue("4,1R,3").get(2).length);
+        {
+            final List<Block> clue0 = createClue("1,2R,3");
+            assertEquals(3, clue0.size());
+            assertEquals(1, clue0.get(0).color);
+            assertEquals(2, clue0.get(1).color);
+            assertEquals(1, clue0.get(2).color);
+        }
+        {
+            final List<Block> clue0 = createClue("4,1R,3");
+            assertEquals(4, clue0.get(0).length);
+            assertEquals(1, clue0.get(1).length);
+            assertEquals(3, clue0.get(2).length);
+        }
 
         CellSequence cells1 = createLine("----           ----");
         CellSequence cells2 = createLine("----           --#-");
