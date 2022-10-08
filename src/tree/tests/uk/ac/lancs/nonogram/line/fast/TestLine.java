@@ -67,6 +67,7 @@ public final class TestLine extends TestCase {
         CellSequence cells1 = createLine("----           ----");
         CellSequence cells2 = createLine("----           --#-");
         CellSequence cells3 = createLine("---- #      R  ----", 3);
+        CellSequence cells4 = createLine("----        #  ----");
 
         List<Block> clue1 = createClue("6");
         List<Block> clue2 = createClue("6,4");
@@ -76,6 +77,7 @@ public final class TestLine extends TestCase {
         List<Block> clue6 = createClue("6,2R,1");
         List<Block> clue7 = createClue("6,2R,1R,1");
 
+        testPush(cells4, clue1, 7);
         testPush(cells1, clue1, 4);
         testPush(cells1, clue2, 4, 11);
         testPush(cells1, clue3);
