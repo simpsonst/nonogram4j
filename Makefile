@@ -144,6 +144,7 @@ deps_solver += display
 
 roots_tests=$(found_tests)
 deps_tests += lib
+deps_tests += clue
 deps_tests += line
 deps_tests += util
 ppdeps_tests += fast
