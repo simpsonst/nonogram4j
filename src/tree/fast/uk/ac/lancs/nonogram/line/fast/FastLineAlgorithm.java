@@ -57,8 +57,8 @@ public final class FastLineAlgorithm implements LineAlgorithm {
     private FastLineAlgorithm() {}
 
     /**
-     * The prefix for configuration strings for this algorithm, namely *
-     * * {@value}
+     * The prefix for configuration strings for this algorithm, namely
+     * {@value}
      */
     public static final String ALGORITHM_TYPE = "fast";
 
@@ -78,7 +78,8 @@ public final class FastLineAlgorithm implements LineAlgorithm {
      * 
      * @param clue the clue describing the blocks to be fitted
      * 
-     * @return true if an inconsistency was found
+     * @return {@code true} if an inconsistency was found; {@code false}
+     * if a solution was found
      */
     public static boolean push(int[] min, CellSequence cells,
                                List<? extends Block> clue) {
